@@ -1,0 +1,19 @@
+```json
+{
+  "name": "pharmatwin-backend",
+  "version": "1.0.0",
+  "description": "PharmaTwin AI backend MVP",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "better-sqlite3": "^12.4.1"
+  }
+}
+```
