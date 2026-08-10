@@ -1,0 +1,3604 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PharmaTwin AI</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root{
+  --bg:#06101c;
+  --panel:#0b1928;
+  --panel2:#0e2032;
+  --line:#1b3348;
+  --text:#edf5fa;
+  --muted:#8ba2b5;
+  --brand:#1bd0b8;
+  --danger:#ff6272;
+  --warning:#f4bd50;
+  --blue:#65a9ff;
+  --success:#42d69f;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,input,select{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* AUTH */
+
+.auth{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(circle at 20% 20%,rgba(27,208,184,.08),transparent 30%),
+    radial-gradient(circle at 80% 80%,rgba(101,169,255,.08),transparent 30%),
+    var(--bg);
+}
+
+.auth-card{
+  width:420px;
+  max-width:92%;
+  background:rgba(11,25,40,.95);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:35px;
+  box-shadow:0 30px 90px rgba(0,0,0,.4);
+}
+
+.auth-logo{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.logo-box{
+  width:45px;
+  height:45px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:var(--brand);
+  color:#031311;
+  font-weight:900;
+  font-size:22px;
+}
+
+.auth h1{
+  font-size:25px;
+  margin:0;
+}
+
+.auth-sub{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:5px;
+}
+
+.auth input{
+  width:100%;
+  margin:8px 0 15px;
+  padding:12px;
+  background:#081624;
+  color:white;
+  border:1px solid var(--line);
+  border-radius:8px;
+  outline:none;
+}
+
+.auth label{
+  font-size:11px;
+  color:#9eb1c1;
+}
+
+.primary{
+  width:100%;
+  padding:12px;
+  border:0;
+  border-radius:8px;
+  background:var(--brand);
+  color:#031411;
+  font-weight:800;
+}
+
+.switch{
+  text-align:center;
+  margin-top:18px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.switch span{
+  color:var(--brand);
+  cursor:pointer;
+}
+
+/* APP */
+
+.app{
+  display:none;
+  min-height:100vh;
+}
+
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:255px;
+  background:#071421;
+  border-right:1px solid var(--line);
+  z-index:20;
+}
+
+.brand{
+  padding:23px;
+  border-bottom:1px solid var(--line);
+}
+
+.brand-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:19px;
+  font-weight:850;
+}
+
+.brand-icon{
+  width:35px;
+  height:35px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:var(--brand);
+  color:#031411;
+  font-weight:900;
+}
+
+.brand small{
+  display:block;
+  margin-left:45px;
+  color:#61798d;
+  font-size:8px;
+  letter-spacing:1.6px;
+  margin-top:5px;
+}
+
+.nav{
+  padding:14px;
+}
+
+.nav-section{
+  color:#597186;
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  padding:14px 9px 7px;
+}
+
+.nav button{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#8ea4b5;
+  text-align:left;
+  padding:10px 12px;
+  border-radius:8px;
+  margin-bottom:3px;
+  font-size:11px;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:rgba(27,208,184,.09);
+  color:var(--brand);
+}
+
+.user-box{
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  border-top:1px solid var(--line);
+  padding:15px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.avatar{
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  background:#16354b;
+  display:grid;
+  place-items:center;
+  color:var(--brand);
+  font-size:11px;
+  font-weight:800;
+}
+
+.user-name{
+  font-size:11px;
+  font-weight:700;
+}
+
+.user-role{
+  color:var(--muted);
+  font-size:9px;
+  margin-top:3px;
+}
+
+/* MAIN */
+
+.main{
+  margin-left:255px;
+}
+
+.topbar{
+  height:68px;
+  border-bottom:1px solid var(--line);
+  background:rgba(6,16,28,.9);
+  backdrop-filter:blur(15px);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+
+.search{
+  width:350px;
+  position:relative;
+}
+
+.search input{
+  width:100%;
+  background:#0a1827;
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:10px 12px 10px 35px;
+  color:white;
+}
+
+.search span{
+  position:absolute;
+  left:12px;
+  top:9px;
+  color:var(--muted);
+}
+
+.top-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.system{
+  font-size:10px;
+  color:#8da4b6;
+}
+
+.green-dot{
+  display:inline-block;
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--success);
+  margin-right:5px;
+}
+
+.icon{
+  width:35px;
+  height:35px;
+  background:#0b1928;
+  border:1px solid var(--line);
+  color:#a8bbc9;
+  border-radius:8px;
+}
+
+.content{
+  padding:28px;
+  max-width:1600px;
+  margin:auto;
+}
+
+/* COMMON */
+
+.page-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:22px;
+}
+
+h1{
+  font-size:26px;
+  margin:0;
+}
+
+.subtitle{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:6px;
+}
+
+.grid{
+  display:grid;
+  gap:15px;
+}
+
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.main-grid{grid-template-columns:1.7fr 1fr}
+
+.card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:18px;
+}
+
+.card-title{
+  font-size:12px;
+  font-weight:800;
+}
+
+.card-sub{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:4px;
+}
+
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:16px;
+}
+
+.btn{
+  background:#0b1b2b;
+  color:#b9cbd7;
+  border:1px solid var(--line);
+  padding:9px 13px;
+  border-radius:7px;
+  font-size:10px;
+}
+
+.btn-primary{
+  background:var(--brand);
+  border-color:var(--brand);
+  color:#031411;
+  font-weight:800;
+}
+
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:20px;
+  font-size:9px;
+  font-weight:800;
+}
+
+.green{background:rgba(66,214,159,.12);color:var(--success)}
+.red{background:rgba(255,98,114,.12);color:var(--danger)}
+.yellow{background:rgba(244,189,80,.12);color:var(--warning)}
+.blue{background:rgba(101,169,255,.12);color:var(--blue)}
+
+.metric{
+  font-size:28px;
+  font-weight:900;
+  margin-top:12px;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.small{
+  font-size:10px;
+}
+
+/* PATIENT */
+
+.patient-header{
+  display:flex;
+  gap:15px;
+  align-items:center;
+}
+
+.patient-avatar{
+  width:58px;
+  height:58px;
+  border-radius:14px;
+  background:linear-gradient(135deg,#123b4b,#102438);
+  display:grid;
+  place-items:center;
+  color:var(--brand);
+  font-weight:900;
+  font-size:20px;
+}
+
+.patient-name{
+  font-size:18px;
+  font-weight:850;
+}
+
+.patient-meta{
+  color:var(--muted);
+  font-size:10px;
+  margin-top:5px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  border-top:1px solid var(--line);
+  margin-top:18px;
+}
+
+.stat{
+  padding:14px 10px;
+  border-right:1px solid var(--line);
+}
+
+.stat:last-child{
+  border:0;
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:9px;
+}
+
+.stat-value{
+  font-size:17px;
+  font-weight:850;
+  margin-top:5px;
+}
+
+/* TABLE */
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th{
+  color:#688196;
+  text-transform:uppercase;
+  font-size:8px;
+  letter-spacing:1px;
+  text-align:left;
+  padding:11px;
+  border-bottom:1px solid var(--line);
+}
+
+td{
+  padding:13px 11px;
+  border-bottom:1px solid rgba(27,51,72,.55);
+  font-size:10px;
+}
+
+tr:hover{
+  background:#0d2133;
+}
+
+/* MEDICATION */
+
+.med{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid var(--line);
+}
+
+.med:last-child{
+  border-bottom:0;
+}
+
+.med-name{
+  font-weight:800;
+  font-size:11px;
+}
+
+.med-info{
+  color:var(--muted);
+  font-size:9px;
+  margin-top:4px;
+}
+
+.med-right{
+  text-align:right;
+}
+
+/* TIMELINE */
+
+.timeline{
+  position:relative;
+  margin-left:10px;
+  padding-left:25px;
+}
+
+.timeline:before{
+  content:"";
+  position:absolute;
+  left:5px;
+  top:3px;
+  bottom:3px;
+  width:1px;
+  background:var(--line);
+}
+
+.event{
+  position:relative;
+  margin-bottom:22px;
+}
+
+.event:before{
+  content:"";
+  position:absolute;
+  left:-24px;
+  top:3px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:var(--brand);
+}
+
+.event-time{
+  color:var(--muted);
+  font-size:8px;
+}
+
+.event-title{
+  font-size:11px;
+  font-weight:800;
+  margin-top:3px;
+}
+
+.event-text{
+  color:#8298a9;
+  font-size:9px;
+  margin-top:4px;
+  line-height:1.5;
+}
+
+/* AI */
+
+.ai{
+  background:linear-gradient(145deg,#0d2630,#0b1928);
+  border-color:rgba(27,208,184,.25);
+}
+
+.ai-title{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+.ai-icon{
+  width:32px;
+  height:32px;
+  border-radius:9px;
+  background:rgba(27,208,184,.1);
+  display:grid;
+  place-items:center;
+  color:var(--brand);
+}
+
+.ai-text{
+  font-size:11px;
+  color:#c3d2dc;
+  line-height:1.7;
+}
+
+.ai-box{
+  margin-top:13px;
+  border-left:3px solid var(--brand);
+  background:#081a24;
+  padding:11px;
+  border-radius:6px;
+}
+
+/* LABS */
+
+.lab{
+  padding:14px;
+  background:#091827;
+  border:1px solid var(--line);
+  border-radius:9px;
+}
+
+.lab-name{
+  font-size:9px;
+  color:var(--muted);
+}
+
+.lab-value{
+  font-size:18px;
+  font-weight:850;
+  margin-top:7px;
+}
+
+.lab-range{
+  color:#687e91;
+  font-size:8px;
+  margin-top:4px;
+}
+
+/* TERMINAL */
+
+.advanced{
+  border:1px solid rgba(255,98,114,.3);
+  background:linear-gradient(145deg,rgba(255,98,114,.06),#0b1928);
+}
+
+.prognosis{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
+.prognosis-circle{
+  width:75px;
+  height:75px;
+  border-radius:50%;
+  border:5px solid var(--warning);
+  display:grid;
+  place-items:center;
+  text-align:center;
+  font-size:10px;
+  font-weight:800;
+}
+
+/* CONSENT */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(6px);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  padding:20px;
+}
+
+.modal{
+  width:500px;
+  max-width:100%;
+  background:#0c1c2b;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:25px;
+  box-shadow:0 30px 90px rgba(0,0,0,.5);
+}
+
+.modal h2{
+  font-size:17px;
+  margin:0 0 7px;
+}
+
+.modal p{
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+}
+
+.consent-box{
+  background:#081725;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:14px;
+  margin:18px 0;
+}
+
+.consent-row{
+  display:flex;
+  gap:10px;
+  padding:8px 0;
+  font-size:10px;
+  color:#b7c9d5;
+}
+
+/* MOBILE */
+
+.mobile{
+  display:none;
+}
+
+@media(max-width:1000px){
+
+  .sidebar{
+    transform:translateX(-100%);
+    transition:.25s;
+  }
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
+
+  .main{
+    margin-left:0;
+  }
+
+  .mobile{
+    display:block;
+  }
+
+  .g4{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .main-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:650px){
+
+  .content{
+    padding:16px;
+  }
+
+  .search{
+    display:none;
+  }
+
+  .g2,.g3,.g4{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .stat:nth-child(2),
+  .stat:nth-child(4){
+    border-right:0;
+  }
+
+  .page-head{
+    flex-direction:column;
+    gap:12px;
+  }
+
+}
+</style>
+</head>
+
+<body>
+
+
+<!-- ================= LOGIN ================= -->
+
+<section class="auth" id="auth">
+
+<div class="auth-card">
+
+  <div class="auth-logo">
+
+    <div class="logo-box">P</div>
+
+    <div>
+      <h1>PharmaTwin AI</h1>
+      <div class="auth-sub">
+        Clinical Digital Twin Platform
+      </div>
+    </div>
+
+  </div>
+
+
+  <div id="loginForm">
+
+    <label>Email / Professional ID</label>
+    <input id="loginEmail" placeholder="doctor@pharmatwin.ai">
+
+    <label>Password</label>
+    <input id="loginPassword" type="password" placeholder="••••••••">
+
+    <button class="primary" onclick="login()">
+      Sign in to Workspace
+    </button>
+
+    <div class="switch">
+      Don't have an account?
+      <span onclick="showRegister()">Create account</span>
+    </div>
+
+  </div>
+
+
+  <div id="registerForm" class="hidden">
+
+    <label>Full name</label>
+    <input id="regName" placeholder="Dr. Your Name">
+
+    <label>Email</label>
+    <input id="regEmail" placeholder="email@example.com">
+
+    <label>Password</label>
+    <input id="regPassword" type="password" placeholder="Create password">
+
+    <label>Professional role</label>
+    <select id="regRole"
+      style="width:100%;padding:12px;background:#081624;color:white;border:1px solid var(--line);border-radius:8px;margin:8px 0 15px">
+      <option>Physician</option>
+      <option>Clinical Researcher</option>
+      <option>Pharmacist</option>
+      <option>Administrator</option>
+    </select>
+
+    <button class="primary" onclick="register()">
+      Create Workspace
+    </button>
+
+    <div class="switch">
+      Already registered?
+      <span onclick="showLogin()">Sign in</span>
+    </div>
+
+  </div>
+
+</div>
+
+</section>
+
+
+<!-- ================= APP ================= -->
+
+<div class="app" id="app">
+
+
+<aside class="sidebar" id="sidebar">
+
+  <div class="brand">
+
+    <div class="brand-title">
+      <div class="brand-icon">P</div>
+      PharmaTwin
+    </div>
+
+    <small>CLINICAL INTELLIGENCE</small>
+
+  </div>
+
+
+  <nav class="nav">
+
+    <div class="nav-section">Workspace</div>
+
+    <button class="active" onclick="page('dashboard',this)">
+      ◈ Command Center
+    </button>
+
+    <button onclick="page('patients',this)">
+      ♙ Patient Digital Twins
+    </button>
+
+    <button onclick="page('simulation',this)">
+      ◉ Drug Simulation
+    </button>
+
+    <button onclick="page('laboratory',this)">
+      ▣ Laboratory
+    </button>
+
+
+    <div class="nav-section">Clinical Intelligence</div>
+
+    <button onclick="page('medications',this)">
+      💊 Medication History
+    </button>
+
+    <button onclick="page('diseases',this)">
+      ⬡ Disease Profiles
+    </button>
+
+    <button onclick="page('advanced',this)">
+      ♡ Advanced Disease Care
+    </button>
+
+    <button onclick="page('alerts',this)">
+      ⚠ Clinical Alerts
+    </button>
+
+
+    <div class="nav-section">Knowledge</div>
+
+    <button onclick="page('evidence',this)">
+      ◇ Evidence Center
+    </button>
+
+    <button onclick="page('activity',this)">
+      ◷ Audit & Activity
+    </button>
+
+
+    <div class="nav-section">System</div>
+
+    <button onclick="page('settings',this)">
+      ⚙ Settings
+    </button>
+
+  </nav>
+
+
+  <div class="user-box">
+
+    <div class="avatar">DR</div>
+
+    <div>
+      <div class="user-name" id="doctorName">
+        Clinical Researcher
+      </div>
+
+      <div class="user-role">
+        Verified workspace
+      </div>
+    </div>
+
+  </div>
+
+</aside>
+
+
+<main class="main">
+
+
+<header class="topbar">
+
+  <div style="display:flex;gap:12px;align-items:center">
+
+    <button class="icon mobile" onclick="toggleSidebar()">☰</button>
+
+    <div class="search">
+      <span>⌕</span>
+      <input
+        placeholder="Search patient, drug, disease..."
+        onkeyup="globalSearch(this.value)"
+      >
+    </div>
+
+  </div>
+
+
+  <div class="top-right">
+
+    <div class="system">
+      <span class="green-dot"></span>
+      Clinical systems operational
+    </div>
+
+    <button class="icon" onclick="openConsent()">
+      +
+    </button>
+
+    <button class="icon" onclick="toast('No new notifications')">
+      ♢
+    </button>
+
+  </div>
+
+</header>
+
+
+<div class="content" id="content"></div>
+
+
+</main>
+
+</div>
+
+
+<!-- ================= CONSENT MODAL ================= -->
+
+<div class="overlay" id="consent">
+
+<div class="modal">
+
+  <h2>Connect Patient via OneID</h2>
+
+  <p>
+    The patient must authorize access before their available
+    health information can be imported into PharmaTwin.
+  </p>
+
+
+  <div class="consent-box">
+
+    <div class="consent-row">
+      ✓ Identity verification
+    </div>
+
+    <div class="consent-row">
+      ✓ Available medical history
+    </div>
+
+    <div class="consent-row">
+      ✓ Laboratory information
+    </div>
+
+    <div class="consent-row">
+      ✓ Prescription / medication information
+    </div>
+
+    <div class="consent-row">
+      ✓ Consent can be revoked
+    </div>
+
+  </div>
+
+
+  <div style="display:flex;gap:10px">
+
+    <button
+      class="btn"
+      style="flex:1"
+      onclick="declineConsent()"
+    >
+      Patient does not consent
+    </button>
+
+    <button
+      class="btn btn-primary"
+      style="flex:1"
+      onclick="sendSMS()"
+    >
+      Send SMS Consent
+    </button>
+
+  </div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ================= DATA ================= */
+
+const patients=[
+
+{
+ id:"PT-001",
+ name:"Ali Valiyev",
+ age:52,
+ sex:"Male",
+ blood:"A+",
+ mrn:"UZ-2026-001",
+ egfr:42,
+ creatinine:148,
+ glucose:8.4,
+ hba1c:7.9,
+ alt:38,
+ ast:32,
+ risk:72,
+ diagnosis:"Type 2 Diabetes",
+ stage:"Moderate",
+ allergies:"Penicillin",
+ meds:[
+  {
+   name:"Metformin",
+   dose:"850 mg",
+   duration:"18 months",
+   benefit:"Improved glucose control",
+   side:"Occasional GI discomfort"
+  },
+  {
+   name:"Enalapril",
+   dose:"10 mg",
+   duration:"11 months",
+   benefit:"Blood pressure reduction",
+   side:"Mild dizziness"
+  }
+ ]
+},
+
+{
+ id:"PT-002",
+ name:"Malika Rasulova",
+ age:64,
+ sex:"Female",
+ blood:"B+",
+ mrn:"UZ-2026-002",
+ egfr:28,
+ creatinine:210,
+ glucose:7.9,
+ hba1c:8.1,
+ alt:85,
+ ast:76,
+ risk:88,
+ diagnosis:"Chronic Kidney Disease",
+ stage:"Advanced",
+ allergies:"None recorded",
+ meds:[
+  {
+   name:"Furosemide",
+   dose:"40 mg",
+   duration:"8 months",
+   benefit:"Reduced fluid retention",
+   side:"Electrolyte monitoring required"
+  },
+  {
+   name:"Spironolactone",
+   dose:"25 mg",
+   duration:"5 months",
+   benefit:"Cardiovascular support",
+   side:"Potassium monitoring required"
+  }
+ ]
+},
+
+{
+ id:"PT-003",
+ name:"Jasur Karimov",
+ age:47,
+ sex:"Male",
+ blood:"O+",
+ mrn:"UZ-2026-003",
+ egfr:79,
+ creatinine:96,
+ glucose:6.1,
+ hba1c:6.2,
+ alt:29,
+ ast:25,
+ risk:31,
+ diagnosis:"Hypertension",
+ stage:"Controlled",
+ allergies:"None recorded",
+ meds:[
+  {
+   name:"Amlodipine",
+   dose:"5 mg",
+   duration:"7 months",
+   benefit:"Blood pressure control",
+   side:"Mild ankle swelling"
+  }
+ ]
+}
+
+];
+
+let selected=patients[0];
+let currentPage="dashboard";
+let chart;
+
+
+/* ================= AUTH ================= */
+
+function showRegister(){
+
+ document.getElementById("loginForm").classList.add("hidden");
+ document.getElementById("registerForm").classList.remove("hidden");
+
+}
+
+function showLogin(){
+
+ document.getElementById("registerForm").classList.add("hidden");
+ document.getElementById("loginForm").classList.remove("hidden");
+
+}
+
+function login(){
+
+ const email=document.getElementById("loginEmail").value;
+
+ document.getElementById("doctorName").innerText=
+   email ? email.split("@")[0] : "Clinical Researcher";
+
+ document.getElementById("auth").style.display="none";
+ document.getElementById("app").style.display="block";
+
+ render();
+
+ toast("Secure workspace opened");
+
+}
+
+function register(){
+
+ const name=document.getElementById("regName").value;
+
+ if(name)
+   document.getElementById("doctorName").innerText=name;
+
+ showLogin();
+
+ toast("Account created — please sign in");
+
+}
+
+
+/* ================= NAVIGATION ================= */
+
+function page(name,btn){
+
+ currentPage=name;
+
+ document.querySelectorAll(".nav button")
+   .forEach(x=>x.classList.remove("active"));
+
+ if(btn)btn.classList.add("active");
+
+ render();
+
+ if(innerWidth<1000)
+   document.getElementById("sidebar").classList.remove("open");
+
+}
+
+function render(){
+
+ const c=document.getElementById("content");
+
+ if(currentPage==="dashboard")c.innerHTML=dashboard();
+
+ if(currentPage==="patients")c.innerHTML=patientPage();
+
+ if(currentPage==="simulation")c.innerHTML=simulationPage();
+
+ if(currentPage==="laboratory")c.innerHTML=labPage();
+
+ if(currentPage==="medications")c.innerHTML=medicationPage();
+
+ if(currentPage==="diseases")c.innerHTML=diseasePage();
+
+ if(currentPage==="advanced")c.innerHTML=advancedPage();
+
+ if(currentPage==="alerts")c.innerHTML=alertPage();
+
+ if(currentPage==="evidence")c.innerHTML=evidencePage();
+
+ if(currentPage==="activity")c.innerHTML=activityPage();
+
+ if(currentPage==="settings")c.innerHTML=settingsPage();
+
+ if(currentPage==="simulation")
+   setTimeout(initChart,100);
+
+}
+
+
+/* ================= DASHBOARD ================= */
+
+function dashboard(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+  <h1>Clinical Command Center</h1>
+  <div class="subtitle">
+   Personalized patient intelligence and digital twin monitoring.
+  </div>
+ </div>
+
+ <button class="btn btn-primary"
+   onclick="page('simulation')">
+   Run Drug Simulation →
+ </button>
+
+</div>
+
+
+<div class="grid g4">
+
+ ${metric("Active Digital Twins",patients.length,"+12% this month")}
+ ${metric("Clinical Alerts","3","2 high priority","red")}
+ ${metric("Simulations","148","+24% this week")}
+ ${metric("AI Model","ONLINE","Last checked 2 min ago","green")}
+
+</div>
+
+<br>
+
+
+<div class="grid main-grid">
+
+ <div class="card">
+
+  <div class="card-head">
+
+   <div>
+    <div class="card-title">Patient Risk Overview</div>
+    <div class="card-sub">
+     Current personalized risk monitoring
+    </div>
+   </div>
+
+   <button class="btn"
+    onclick="page('patients')">
+    View Registry
+   </button>
+
+  </div>
+
+
+  <table>
+
+   <thead>
+    <tr>
+     <th>Patient</th>
+     <th>Diagnosis</th>
+     <th>eGFR</th>
+     <th>Risk</th>
+    </tr>
+   </thead>
+
+   <tbody>
+
+   ${patients.map(p=>`
+
+    <tr onclick="openPatient('${p.id}')">
+
+     <td>
+      <strong>${p.name}</strong>
+      <div class="patient-meta">${p.mrn}</div>
+     </td>
+
+     <td>${p.diagnosis}</td>
+
+     <td>
+      <span class="badge ${p.egfr<45?'red':p.egfr<60?'yellow':'green'}">
+       ${p.egfr}
+      </span>
+     </td>
+
+     <td>
+      <span class="badge ${p.risk>75?'red':p.risk>50?'yellow':'green'}">
+       ${p.risk}/100
+      </span>
+     </td>
+
+    </tr>
+
+   `).join("")}
+
+   </tbody>
+
+  </table>
+
+ </div>
+
+
+ <div class="card">
+
+  <div class="card-head">
+   <div>
+    <div class="card-title">Priority Alerts</div>
+    <div class="card-sub">Requires clinical review</div>
+   </div>
+  </div>
+
+  ${alert("Renal function below threshold","Ali Valiyev","High")}
+  ${alert("Creatinine trend increasing","Malika Rasulova","High")}
+  ${alert("Medication monitoring","Malika Rasulova","Medium")}
+
+ </div>
+
+</div>
+
+
+<br>
+
+
+<div class="grid g2">
+
+ <div class="card">
+
+  <div class="card-head">
+   <div>
+    <div class="card-title">Patient Journey</div>
+    <div class="card-sub">${selected.name}</div>
+   </div>
+  </div>
+
+  <div class="timeline">
+
+   ${event("Today","Laboratory data synchronized",
+     "Latest renal and metabolic markers imported.")}
+
+   ${event("2 days ago","Dose adjustment recorded",
+     "Medication dose changed and monitoring initiated.")}
+
+   ${event("12 days ago","Clinical review",
+     "Treatment response evaluated.")}
+
+   ${event("3 months ago","Diagnosis updated",
+     selected.diagnosis+" recorded.")}
+
+  </div>
+
+ </div>
+
+
+ <div class="card ai">
+
+  <div class="ai-title">
+
+   <div class="ai-icon">✦</div>
+
+   <div>
+    <div class="card-title">
+     PharmaTwin Clinical Copilot
+    </div>
+    <div class="card-sub">
+     Explainable patient intelligence
+    </div>
+   </div>
+
+  </div>
+
+  <div class="ai-text">
+
+   <strong style="color:white">
+    Current patient: ${selected.name}
+   </strong>
+
+   <p>
+    The patient's current renal function,
+    medication history and laboratory trends
+    should be reviewed together.
+   </p>
+
+   <div class="ai-box">
+
+    <strong style="color:var(--brand)">
+     Key observation
+    </strong>
+
+    <br>
+
+    eGFR is currently
+    <strong>${selected.egfr} mL/min</strong>.
+    The system recommends reviewing
+    medication exposure in the simulation workspace.
+
+   </div>
+
+  </div>
+
+ </div>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= PATIENT PAGE ================= */
+
+function patientPage(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+  <h1>Patient Digital Twins</h1>
+  <div class="subtitle">
+   Longitudinal patient profiles and personalized clinical models.
+  </div>
+ </div>
+
+ <button class="btn btn-primary"
+   onclick="openConsent()">
+   + Connect Patient via OneID
+ </button>
+
+</div>
+
+
+${patientHero()}
+
+
+<br>
+
+
+<div class="grid g2">
+
+ <div class="card">
+
+  <div class="card-head">
+   <div>
+    <div class="card-title">Patient Identity</div>
+    <div class="card-sub">Verified profile information</div>
+   </div>
+
+   <span class="badge blue">
+    DIGITAL TWIN ACTIVE
+   </span>
+  </div>
+
+
+  <div class="grid g2">
+
+   ${info("Patient ID",selected.id)}
+   ${info("MRN",selected.mrn)}
+   ${info("Age",selected.age+" years")}
+   ${info("Sex",selected.sex)}
+   ${info("Blood group",selected.blood)}
+   ${info("Allergies",selected.allergies)}
+
+  </div>
+
+ </div>
+
+
+ <div class="card">
+
+  <div class="card-head">
+   <div>
+    <div class="card-title">Current Diseases</div>
+    <div class="card-sub">Clinical condition</div>
+   </div>
+  </div>
+
+  <div class="med">
+
+   <div>
+    <div class="med-name">${selected.diagnosis}</div>
+    <div class="med-info">
+     Disease stage: ${selected.stage}
+    </div>
+   </div>
+
+   <span class="badge ${selected.stage==="Advanced"?'red':'yellow'}">
+    ${selected.stage}
+   </span>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+<br>
+
+
+<div class="card">
+
+ <div class="card-head">
+
+  <div>
+   <div class="card-title">Laboratory Snapshot</div>
+   <div class="card-sub">
+    Most recent available values
+   </div>
+  </div>
+
+  <button class="btn"
+    onclick="page('laboratory')">
+    Full Laboratory
+  </button>
+
+ </div>
+
+
+ <div class="grid g4">
+
+  ${lab("eGFR",selected.egfr+" mL/min","Renal function")}
+  ${lab("Creatinine",selected.creatinine+" µmol/L","Kidney marker")}
+  ${lab("Glucose",selected.glucose+" mmol/L","Metabolic")}
+  ${lab("HbA1c",selected.hba1c+" %","Glycemic control")}
+  ${lab("ALT",selected.alt+" U/L","Liver marker")}
+  ${lab("AST",selected.ast+" U/L","Liver marker")}
+
+ </div>
+
+</div>
+
+`;
+
+}
+
+function patientHero(){
+
+return `
+
+<div class="card">
+
+ <div class="patient-header">
+
+  <div class="patient-avatar">
+   ${selected.name.split(" ").map(x=>x[0]).join("")}
+  </div>
+
+  <div>
+
+   <div class="patient-name">
+    ${selected.name}
+   </div>
+
+   <div class="patient-meta">
+    ${selected.age} years · ${selected.sex} · ${selected.mrn}
+   </div>
+
+  </div>
+
+  <div style="margin-left:auto">
+
+   <span class="badge ${selected.risk>75?'red':selected.risk>50?'yellow':'green'}">
+    Risk ${selected.risk}/100
+   </span>
+
+  </div>
+
+ </div>
+
+
+ <div class="stats">
+
+  ${stat("eGFR",selected.egfr)}
+  ${stat("Creatinine",selected.creatinine)}
+  ${stat("Glucose",selected.glucose)}
+  ${stat("HbA1c",selected.hba1c)}
+  ${stat("Risk",selected.risk+"/100")}
+
+ </div>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= MEDICATIONS ================= */
+
+function medicationPage(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+  <h1>Medication History</h1>
+  <div class="subtitle">
+   Complete medication exposure, benefit and adverse-effect history.
+  </div>
+ </div>
+
+ <button class="btn btn-primary"
+  onclick="toast('Medication entry form opened')">
+  + Add Medication
+ </button>
+
+</div>
+
+
+${patientHero()}
+
+
+<br>
+
+
+<div class="grid g2">
+
+ <div class="card">
+
+  <div class="card-head">
+   <div>
+    <div class="card-title">Current Medications</div>
+    <div class="card-sub">
+     Active treatment profile
+    </div>
+   </div>
+  </div>
+
+  ${selected.meds.map(m=>`
+
+   <div class="med">
+
+    <div>
+
+     <div class="med-name">
+      ${m.name}
+     </div>
+
+     <div class="med-info">
+      ${m.dose} · ${m.duration}
+     </div>
+
+    </div>
+
+    <span class="badge green">
+     ACTIVE
+    </span>
+
+   </div>
+
+  `).join("")}
+
+ </div>
+
+
+ <div class="card ai">
+
+  <div class="ai-title">
+
+   <div class="ai-icon">✦</div>
+
+   <div>
+    <div class="card-title">
+     Medication Intelligence
+    </div>
+
+    <div class="card-sub">
+     Treatment history analysis
+    </div>
+
+   </div>
+
+  </div>
+
+
+  <div class="ai-text">
+
+   The system compares medication changes
+   with laboratory and clinical trends.
+
+   <div class="ai-box">
+
+    <strong style="color:var(--brand)">
+     Example association
+    </strong>
+
+    <br>
+
+    Dose modification was followed by
+    a measurable laboratory change.
+
+    <br><br>
+
+    <span class="muted">
+     Association ≠ proven causation.
+     Clinical review is required.
+    </span>
+
+   </div>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+<br>
+
+
+<div class="card">
+
+ <div class="card-head">
+
+  <div>
+   <div class="card-title">
+    Medication Benefit & Side Effect Record
+   </div>
+
+   <div class="card-sub">
+    Longitudinal treatment outcomes
+   </div>
+  </div>
+
+ </div>
+
+
+ <table>
+
+  <thead>
+   <tr>
+    <th>Medication</th>
+    <th>Dose</th>
+    <th>Duration</th>
+    <th>Observed benefit</th>
+    <th>Side effects</th>
+   </tr>
+  </thead>
+
+  <tbody>
+
+   ${selected.meds.map(m=>`
+
+    <tr>
+
+     <td><strong>${m.name}</strong></td>
+     <td>${m.dose}</td>
+     <td>${m.duration}</td>
+
+     <td>
+      <span class="badge green">
+       ${m.benefit}
+      </span>
+     </td>
+
+     <td>
+      <span class="badge yellow">
+       ${m.side}
+      </span>
+     </td>
+
+    </tr>
+
+   `).join("")}
+
+  </tbody>
+
+ </table>
+
+</div>
+
+
+<br>
+
+
+<div class="card">
+
+ <div class="card-head">
+
+  <div>
+   <div class="card-title">
+    Dose Change → Biomarker Timeline
+   </div>
+
+   <div class="card-sub">
+    Relationship between treatment events and laboratory changes
+   </div>
+
+  </div>
+
+ </div>
+
+
+<div class="timeline">
+
+ ${event(
+ "May 14",
+ "Dose started",
+ selected.meds[0]?.name+" initiated."
+ )}
+
+ ${event(
+ "Jun 03",
+ "Dose adjusted",
+ "Treatment dose modified during clinical review."
+ )}
+
+ ${event(
+ "Jun 17",
+ "Laboratory change",
+ "Creatinine / metabolic marker changed from previous measurement."
+ )}
+
+ ${event(
+ "Jun 25",
+ "AI correlation detected",
+ "Possible association identified. Requires clinician confirmation."
+ )}
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= DISEASE ================= */
+
+function diseasePage(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+  <h1>Disease Profile</h1>
+
+  <div class="subtitle">
+   Disease-specific clinical intelligence.
+  </div>
+
+ </div>
+
+ <span class="badge blue">
+  ${selected.diagnosis}
+ </span>
+
+</div>
+
+
+<div class="grid g3">
+
+ ${diseaseCard("Primary Diagnosis",selected.diagnosis,selected.stage)}
+ ${diseaseCard("Renal Status",selected.egfr+" mL/min",
+   selected.egfr<45?"Requires monitoring":"Within current reference")}
+ ${diseaseCard("Metabolic Status",selected.hba1c+" %",
+   "HbA1c")}
+ 
+</div>
+
+
+<br>
+
+
+<div class="card">
+
+ <div class="card-head">
+
+  <div>
+   <div class="card-title">
+    Disease Monitoring Parameters
+   </div>
+
+   <div class="card-sub">
+    Variables currently used by the digital twin
+   </div>
+  </div>
+
+ </div>
+
+
+ <div class="grid g4">
+
+  ${monitor("Renal function","eGFR",selected.egfr)}
+  ${monitor("Kidney marker","Creatinine",selected.creatinine)}
+  ${monitor("Glycemic control","HbA1c",selected.hba1c)}
+  ${monitor("Liver function","ALT",selected.alt)}
+
+ </div>
+
+</div>
+
+
+<br>
+
+
+<div class="card ai">
+
+ <div class="ai-title">
+
+  <div class="ai-icon">✦</div>
+
+  <div>
+   <div class="card-title">
+    Disease-specific AI Insight
+   </div>
+
+   <div class="card-sub">
+    Patient-specific interpretation
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="ai-text">
+
+  The digital twin currently identifies
+  <strong>${selected.diagnosis}</strong>
+  as the primary condition.
+
+  <div class="ai-box">
+
+   <strong style="color:var(--brand)">
+    Monitoring focus
+   </strong>
+
+   <br>
+
+   ${selected.egfr<45
+    ?"Renal function requires particular attention in medication review."
+    :"Continue longitudinal monitoring of renal and metabolic markers."
+   }
+
+  </div>
+
+ </div>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= ADVANCED ================= */
+
+function advancedPage(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+  <h1>Advanced Disease Care</h1>
+
+  <div class="subtitle">
+   Dedicated workspace for patients with advanced or life-limiting disease.
+  </div>
+
+ </div>
+
+ <span class="badge red">
+  CLINICAL REVIEW REQUIRED
+ </span>
+
+</div>
+
+
+<div class="card advanced">
+
+ <div class="patient-header">
+
+  <div class="patient-avatar">
+   ${selected.name.split(" ").map(x=>x[0]).join("")}
+  </div>
+
+  <div>
+
+   <div class="patient-name">
+    ${selected.name}
+   </div>
+
+   <div class="patient-meta">
+    ${selected.diagnosis} · ${selected.stage} stage
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <br>
+
+
+ <div class="grid g3">
+
+  <div>
+
+   <div class="small muted">
+    Current condition
+   </div>
+
+   <div style="font-size:15px;font-weight:800;margin-top:6px">
+    ${selected.stage}
+   </div>
+
+  </div>
+
+
+  <div>
+
+   <div class="small muted">
+    Clinical risk
+   </div>
+
+   <div style="font-size:15px;font-weight:800;margin-top:6px;color:var(--danger)">
+    ${selected.risk}/100
+   </div>
+
+  </div>
+
+
+  <div>
+
+   <div class="small muted">
+    Care priority
+   </div>
+
+   <div style="font-size:15px;font-weight:800;margin-top:6px">
+    Symptom + treatment review
+   </div>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+<br>
+
+
+<div class="grid g2">
+
+ <div class="card">
+
+  <div class="card-head">
+
+   <div>
+    <div class="card-title">
+     Prognostic Outlook
+    </div>
+
+    <div class="card-sub">
+     Model-assisted estimate — not a definitive prediction
+    </div>
+   </div>
+
+  </div>
+
+
+  <div class="prognosis">
+
+   <div class="prognosis-circle">
+    UNCERTAIN
+   </div>
+
+   <div>
+
+    <strong>
+     No exact survival date
+    </strong>
+
+    <p class="small muted">
+     Prognosis should be expressed as a
+     validated range when an appropriate
+     clinical model is available.
+    </p>
+
+   </div>
+
+  </div>
+
+
+  <br>
+
+  <span class="badge yellow">
+   Confidence: LIMITED
+  </span>
+
+ </div>
+
+
+ <div class="card ai">
+
+  <div class="ai-title">
+
+   <div class="ai-icon">✦</div>
+
+   <div>
+    <div class="card-title">
+     Individual Care Guidance
+    </div>
+
+    <div class="card-sub">
+     Patient-specific support
+    </div>
+   </div>
+
+  </div>
+
+
+  <div class="ai-text">
+
+   <div class="ai-box">
+
+    <strong style="color:var(--brand)">
+     Recommended review areas
+    </strong>
+
+    <br><br>
+
+    • Current symptoms
+    <br>
+    • Medication burden
+    <br>
+    • Treatment goals
+    <br>
+    • Laboratory deterioration
+    <br>
+    • Supportive care needs
+    <br>
+    • Patient preferences
+
+   </div>
+
+  </div>
+
+ </div>
+
+</div>
+
+
+<br>
+
+
+<div class="card">
+
+ <div class="card-head">
+
+  <div>
+   <div class="card-title">
+    Care Plan
+   </div>
+
+   <div class="card-sub">
+    Individualized clinical planning workspace
+   </div>
+  </div>
+
+  <button class="btn btn-primary"
+   onclick="toast('Care plan editor opened')">
+   Edit Plan
+  </button>
+
+ </div>
+
+
+<table>
+
+ <thead>
+  <tr>
+   <th>Area</th>
+   <th>Current state</th>
+   <th>Priority</th>
+   <th>Review</th>
+  </tr>
+ </thead>
+
+ <tbody>
+
+  <tr>
+   <td>Symptoms</td>
+   <td>Requires assessment</td>
+   <td><span class="badge red">High</span></td>
+   <td>Clinical team</td>
+  </tr>
+
+  <tr>
+   <td>Medication burden</td>
+   <td>${selected.meds.length} active medications</td>
+   <td><span class="badge yellow">Medium</span></td>
+   <td>Pharmacist</td>
+  </tr>
+
+  <tr>
+   <td>Laboratory trend</td>
+   <td>Monitoring required</td>
+   <td><span class="badge yellow">Medium</span></td>
+   <td>Physician</td>
+  </tr>
+
+ </tbody>
+
+</table>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= SIMULATION ================= */
+
+function simulationPage(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+
+  <h1>Drug Response Simulation</h1>
+
+  <div class="subtitle">
+   Compare treatment scenarios against the patient's digital twin.
+  </div>
+
+ </div>
+
+ <span class="badge blue">
+  SIMULATION ENGINE
+ </span>
+
+</div>
+
+
+${patientHero()}
+
+
+<br>
+
+
+<div class="grid main-grid">
+
+ <div class="card">
+
+  <div class="card-head">
+
+   <div>
+    <div class="card-title">
+     Predicted Drug Exposure
+    </div>
+
+    <div class="card-sub">
+     Scenario-based pharmacokinetic visualization
+    </div>
+   </div>
+
+  </div>
+
+
+  <div style="height:360px">
+   <canvas id="chart"></canvas>
+  </div>
+
+ </div>
+
+
+ <div class="card">
+
+  <div class="card-head">
+
+   <div>
+    <div class="card-title">
+     Treatment Scenario
+    </div>
+
+    <div class="card-sub">
+     Adjust parameters for comparison
+    </div>
+
+   </div>
+
+  </div>
+
+
+  <label class="small muted">
+   Medication
+  </label>
+
+  <select id="drug"
+   style="width:100%;padding:11px;background:#081624;color:white;border:1px solid var(--line);border-radius:8px;margin:7px 0 18px">
+
+   <option>Metformin</option>
+   <option>Enalapril</option>
+   <option>Amlodipine</option>
+   <option>Gentamicin</option>
+
+  </select>
+
+
+  <label class="small muted">
+   Daily dose
+  </label>
+
+  <input
+   id="dose"
+   type="range"
+   min="250"
+   max="2000"
+   step="250"
+   value="850"
+   style="width:100%;margin-top:10px"
+   oninput="updateDose()"
+  >
+
+  <div style="display:flex;justify-content:space-between;margin-top:6px">
+
+   <span class="small muted">
+    Dose
+   </span>
+
+   <strong id="doseText">
+    850 mg
+   </strong>
+
+  </div>
+
+
+  <br>
+
+
+  <div class="card"
+   style="background:#091725;border-color:rgba(255,98,114,.25)">
+
+   <div style="display:flex;gap:15px;align-items:center">
+
+    <div
+     id="score"
+     style="
+      width:68px;
+      height:68px;
+      border-radius:50%;
+      border:5px solid var(--danger);
+      display:grid;
+      place-items:center;
+      font-size:17px;
+      font-weight:900">
+      ${selected.risk}
+    </div>
+
+    <div>
+
+     <strong>
+      Predicted risk
+     </strong>
+
+     <div class="small muted"
+      style="margin-top:5px">
+      Based on current scenario
+     </div>
+
+    </div>
+
+   </div>
+
+  </div>
+
+
+  <br>
+
+
+  <button class="btn btn-primary"
+   style="width:100%"
+   onclick="runSimulation()">
+   ▶ Run Simulation
+  </button>
+
+ </div>
+
+</div>
+
+
+<br>
+
+
+<div class="grid g2">
+
+ <div class="card ai">
+
+  <div class="ai-title">
+
+   <div class="ai-icon">✦</div>
+
+   <div>
+    <div class="card-title">
+     AI Clinical Interpretation
+    </div>
+
+    <div class="card-sub">
+     Explainable simulation output
+    </div>
+
+   </div>
+
+  </div>
+
+
+  <div class="ai-text">
+
+   The simulation evaluates how the selected
+   scenario changes predicted exposure and
+   patient-specific risk factors.
+
+   <div class="ai-box">
+
+    <strong style="color:var(--brand)">
+     Important
+    </strong>
+
+    <br>
+
+    This is a simulation for clinical review.
+    It should not independently prescribe,
+    start, stop or change medication.
+
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="card">
+
+  <div class="card-head">
+
+   <div>
+    <div class="card-title">
+     Before / After
+    </div>
+
+    <div class="card-sub">
+     Scenario comparison
+    </div>
+   </div>
+
+  </div>
+
+
+  <table>
+
+   <tr>
+    <td>eGFR</td>
+    <td>${selected.egfr}</td>
+    <td>→</td>
+    <td>${selected.egfr}</td>
+   </tr>
+
+   <tr>
+    <td>Creatinine</td>
+    <td>${selected.creatinine}</td>
+    <td>→</td>
+    <td>${selected.creatinine}</td>
+   </tr>
+
+   <tr>
+    <td>Risk</td>
+    <td>${selected.risk}</td>
+    <td>→</td>
+    <td id="afterRisk">${selected.risk}</td>
+   </tr>
+
+  </table>
+
+ </div>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= LAB ================= */
+
+function labPage(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+
+  <h1>Laboratory Intelligence</h1>
+
+  <div class="subtitle">
+   Structured laboratory data and longitudinal trends.
+  </div>
+
+ </div>
+
+ <button class="btn btn-primary"
+  onclick="toast('OCR upload interface opened')">
+  Upload Report
+ </button>
+
+</div>
+
+
+${patientHero()}
+
+
+<br>
+
+
+<div class="card">
+
+ <div class="card-head">
+
+  <div>
+   <div class="card-title">
+    Current Laboratory Results
+   </div>
+
+   <div class="card-sub">
+    Patient-specific values
+   </div>
+  </div>
+
+ </div>
+
+
+ <div class="grid g4">
+
+  ${lab("Creatinine",selected.creatinine+" µmol/L","Kidney")}
+  ${lab("eGFR",selected.egfr+" mL/min","Renal")}
+  ${lab("Glucose",selected.glucose+" mmol/L","Metabolic")}
+  ${lab("HbA1c",selected.hba1c+" %","Glycemic")}
+  ${lab("ALT",selected.alt+" U/L","Liver")}
+  ${lab("AST",selected.ast+" U/L","Liver")}
+
+ </div>
+
+</div>
+
+
+<br>
+
+
+<div class="grid g2">
+
+ <div class="card">
+
+  <div class="card-head">
+
+   <div>
+    <div class="card-title">
+     Laboratory Timeline
+    </div>
+
+    <div class="card-sub">
+     Longitudinal changes
+    </div>
+   </div>
+
+  </div>
+
+
+  <div class="timeline">
+
+   ${event("Today","Creatinine","148 µmol/L")}
+   ${event("2 weeks ago","Creatinine","139 µmol/L")}
+   ${event("1 month ago","Creatinine","128 µmol/L")}
+   ${event("3 months ago","Creatinine","119 µmol/L")}
+
+  </div>
+
+ </div>
+
+
+ <div class="card ai">
+
+  <div class="ai-title">
+
+   <div class="ai-icon">✦</div>
+
+   <div>
+    <div class="card-title">
+     Laboratory AI Insight
+    </div>
+
+   </div>
+
+  </div>
+
+  <div class="ai-text">
+
+   A longitudinal change is visible in the
+   creatinine series.
+
+   <div class="ai-box">
+
+    <strong style="color:var(--brand)">
+     Review recommended
+    </strong>
+
+    <br>
+
+    Compare this trend with medication
+    changes, hydration status and other
+    relevant clinical information.
+
+   </div>
+
+  </div>
+
+ </div>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= ALERT ================= */
+
+function alertPage(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+  <h1>Clinical Alerts</h1>
+  <div class="subtitle">
+   Prioritized events generated from patient data.
+  </div>
+ </div>
+
+ <span class="badge red">
+  3 ACTIVE
+ </span>
+
+</div>
+
+
+<div class="grid g2">
+
+ <div>
+
+  ${alert("Renal function below monitoring threshold","Ali Valiyev","High")}
+  ${alert("Creatinine trend detected","Malika Rasulova","High")}
+  ${alert("Medication monitoring required","Malika Rasulova","Medium")}
+
+ </div>
+
+
+ <div class="card ai">
+
+  <div class="ai-title">
+
+   <div class="ai-icon">✦</div>
+
+   <div>
+    <div class="card-title">
+     Alert Intelligence
+    </div>
+
+    <div class="card-sub">
+     Why the alert appeared
+    </div>
+
+   </div>
+
+  </div>
+
+
+  <div class="ai-text">
+
+   Alerts are generated using patient-specific
+   laboratory values, diagnoses, medication
+   history and predefined clinical rules.
+
+   <div class="ai-box">
+
+    <strong style="color:var(--brand)">
+     Recommended workflow
+    </strong>
+
+    <br>
+
+    Review patient → inspect evidence →
+    simulate scenario → clinician decision.
+
+   </div>
+
+  </div>
+
+ </div>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= EVIDENCE ================= */
+
+function evidencePage(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+
+  <h1>Evidence Center</h1>
+
+  <div class="subtitle">
+   Clinical rules, evidence and model transparency.
+  </div>
+
+ </div>
+
+</div>
+
+
+<div class="grid g3">
+
+ ${evidence("RENAL-001","Renal Function Monitoring",
+ "Reduced renal function may affect medication exposure.")}
+
+ ${evidence("DDI-008","Drug Interaction Screening",
+ "Medication combinations can require additional monitoring.")}
+
+ ${evidence("LAB-021","Laboratory Trend Analysis",
+ "Longitudinal laboratory data can identify clinically relevant trends.")}
+
+</div>
+
+
+<br>
+
+
+<div class="card">
+
+ <div class="card-head">
+
+  <div>
+   <div class="card-title">
+    Explainability Framework
+   </div>
+
+   <div class="card-sub">
+    Every AI output should expose its supporting factors.
+   </div>
+  </div>
+
+ </div>
+
+
+<div class="grid g3">
+
+ ${step("01","Patient Data","Laboratory, diagnoses and medication history.")}
+ ${step("02","Simulation","Patient-specific scenario modeling.")}
+ ${step("03","Explanation","Factors and evidence supporting the output.")}
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= ACTIVITY ================= */
+
+function activityPage(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+
+  <h1>Audit & Activity</h1>
+
+  <div class="subtitle">
+   Traceability for patient data and system actions.
+  </div>
+
+ </div>
+
+</div>
+
+
+<div class="card">
+
+ <table>
+
+  <thead>
+
+   <tr>
+    <th>Time</th>
+    <th>User</th>
+    <th>Action</th>
+    <th>Patient</th>
+    <th>Status</th>
+   </tr>
+
+  </thead>
+
+
+  <tbody>
+
+   <tr>
+    <td>09:42</td>
+    <td>Clinical Researcher</td>
+    <td>Laboratory viewed</td>
+    <td>${selected.name}</td>
+    <td><span class="badge green">Success</span></td>
+   </tr>
+
+   <tr>
+    <td>09:38</td>
+    <td>Clinical Researcher</td>
+    <td>Simulation executed</td>
+    <td>${selected.name}</td>
+    <td><span class="badge green">Success</span></td>
+   </tr>
+
+   <tr>
+    <td>09:31</td>
+    <td>System</td>
+    <td>Risk recalculated</td>
+    <td>${selected.name}</td>
+    <td><span class="badge blue">System</span></td>
+   </tr>
+
+   <tr>
+    <td>09:18</td>
+    <td>System</td>
+    <td>Digital Twin synchronized</td>
+    <td>${selected.name}</td>
+    <td><span class="badge green">Success</span></td>
+   </tr>
+
+  </tbody>
+
+ </table>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= SETTINGS ================= */
+
+function settingsPage(){
+
+return `
+
+<div class="page-head">
+
+ <div>
+
+  <h1>Settings</h1>
+
+  <div class="subtitle">
+   Workspace, security and integration settings.
+  </div>
+
+ </div>
+
+</div>
+
+
+<div class="grid g2">
+
+ <div class="card">
+
+  <div class="card-head">
+   <div>
+    <div class="card-title">
+     Workspace
+    </div>
+
+    <div class="card-sub">
+     Current environment
+    </div>
+   </div>
+  </div>
+
+  ${setting("Environment","Development")}
+  ${setting("Model","PharmaTwin Engine v0.1")}
+  ${setting("Data mode","Synthetic / Demo")}
+  ${setting("AI status","Operational")}
+
+ </div>
+
+
+ <div class="card">
+
+  <div class="card-head">
+   <div>
+    <div class="card-title">
+     Integrations
+    </div>
+
+    <div class="card-sub">
+     External systems
+    </div>
+   </div>
+  </div>
+
+  ${setting("OneID","Demo connection")}
+  ${setting("SMS","Demo service")}
+  ${setting("Medical APIs","Not connected")}
+  ${setting("OCR","Prototype")}
+
+ </div>
+
+
+ <div class="card">
+
+  <div class="card-head">
+   <div>
+    <div class="card-title">
+     Security
+    </div>
+
+    <div class="card-sub">
+     Access controls
+    </div>
+   </div>
+  </div>
+
+  ${setting("Two-factor authentication","Enabled")}
+  ${setting("Audit logging","Enabled")}
+  ${setting("Consent tracking","Enabled")}
+  ${setting("Role-based access","Enabled")}
+
+ </div>
+
+
+ <div class="card">
+
+  <div class="card-head">
+   <div>
+    <div class="card-title">
+     Data Privacy
+    </div>
+
+    <div class="card-sub">
+     Patient control
+    </div>
+   </div>
+  </div>
+
+  ${setting("Patient consent","Required")}
+  ${setting("Consent revocation","Supported")}
+  ${setting("Data export","Restricted")}
+  ${setting("Data deletion","Admin controlled")}
+
+ </div>
+
+</div>
+
+`;
+
+}
+
+
+/* ================= HELPERS ================= */
+
+function metric(title,value,sub,color="green"){
+
+return `
+
+<div class="card">
+
+ <div class="card-title">${title}</div>
+
+ <div class="metric"
+  style="color:${color==="red"?"var(--danger)":color==="green"?"var(--brand)":"white"}">
+  ${value}
+ </div>
+
+ <div class="card-sub">${sub}</div>
+
+</div>
+
+`;
+}
+
+function stat(name,value){
+
+return `
+
+<div class="stat">
+
+ <div class="stat-label">${name}</div>
+
+ <div class="stat-value">
+  ${value}
+ </div>
+
+</div>
+
+`;
+}
+
+function info(name,value){
+
+return `
+
+<div style="padding:11px 0;border-bottom:1px solid var(--line)">
+
+ <div class="small muted">
+  ${name}
+ </div>
+
+ <strong style="font-size:11px">
+  ${value}
+ </strong>
+
+</div>
+
+`;
+}
+
+function lab(name,value,type){
+
+return `
+
+<div class="lab">
+
+ <div class="lab-name">
+  ${name}
+ </div>
+
+ <div class="lab-value">
+  ${value}
+ </div>
+
+ <div class="lab-range">
+  ${type}
+ </div>
+
+</div>
+
+`;
+}
+
+function alert(title,patient,level){
+
+return `
+
+<div class="card"
+ style="margin-bottom:10px;border-color:${level==="High"?"rgba(255,98,114,.25)":"var(--line)"}">
+
+ <div style="display:flex;gap:11px">
+
+  <div
+   style="width:32px;height:32px;border-radius:8px;background:rgba(255,98,114,.1);display:grid;place-items:center;color:var(--danger)">
+   ⚠
+  </div>
+
+  <div style="flex:1">
+
+   <div style="display:flex;justify-content:space-between">
+
+    <strong style="font-size:11px">
+     ${title}
+    </strong>
+
+    <span class="badge ${level==="High"?"red":"yellow"}">
+     ${level}
+    </span>
+
+   </div>
+
+   <div class="small muted" style="margin-top:5px">
+    ${patient}
+   </div>
+
+   <button class="btn"
+    style="margin-top:10px"
+    onclick="openPatientByName('${patient}')">
+    Review →
+   </button>
+
+  </div>
+
+ </div>
+
+</div>
+
+`;
+}
+
+function event(time,title,text){
+
+return `
+
+<div class="event">
+
+ <div class="event-time">
+  ${time}
+ </div>
+
+ <div class="event-title">
+  ${title}
+ </div>
+
+ <div class="event-text">
+  ${text}
+ </div>
+
+</div>
+
+`;
+}
+
+function diseaseCard(title,value,sub){
+
+return `
+
+<div class="card">
+
+ <div class="card-sub">
+  ${title}
+ </div>
+
+ <div style="font-size:17px;font-weight:850;margin-top:8px">
+  ${value}
+ </div>
+
+ <div class="small muted" style="margin-top:5px">
+  ${sub}
+ </div>
+
+</div>
+
+`;
+}
+
+function monitor(name,label,value){
+
+return `
+
+<div class="card"
+ style="background:#091827">
+
+ <div class="card-sub">
+  ${name}
+ </div>
+
+ <div style="font-size:17px;font-weight:850;margin-top:7px">
+  ${value}
+ </div>
+
+ <div class="small muted">
+  ${label}
+ </div>
+
+</div>
+
+`;
+}
+
+function evidence(code,title,text){
+
+return `
+
+<div class="card">
+
+ <span class="badge blue">
+  ${code}
+ </span>
+
+ <div style="font-size:14px;font-weight:850;margin-top:14px">
+  ${title}
+ </div>
+
+ <div class="small muted"
+  style="line-height:1.6;margin-top:7px">
+  ${text}
+ </div>
+
+ <br>
+
+ <span class="badge green">
+  Evidence-linked
+ </span>
+
+</div>
+
+`;
+}
+
+function step(num,title,text){
+
+return `
+
+<div>
+
+ <div class="metric"
+  style="font-size:22px;color:var(--brand)">
+  ${num}
+ </div>
+
+ <strong style="font-size:12px">
+  ${title}
+ </strong>
+
+ <p class="small muted"
+  style="line-height:1.6">
+  ${text}
+ </p>
+
+</div>
+
+`;
+}
+
+function setting(name,value){
+
+return `
+
+<div style="display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:10px">
+
+ <span class="muted">
+  ${name}
+ </span>
+
+ <strong>
+  ${value}
+ </strong>
+
+</div>
+
+`;
+
+
+/* ================= ACTIONS ================= */
+
+function openPatient(id){
+
+ selected=patients.find(p=>p.id===id)||patients[0];
+
+ page("patients");
+
+}
+
+function openPatientByName(name){
+
+ selected=patients.find(p=>p.name===name)||patients[0];
+
+ page("patients");
+
+}
+
+function updateDose(){
+
+ const dose=document.getElementById("dose").value;
+
+ document.getElementById("doseText").innerText=dose+" mg";
+
+}
+
+function runSimulation(){
+
+ const dose=Number(document.getElementById("dose").value);
+
+ let risk=selected.risk;
+
+ if(selected.egfr<45)
+   risk+=7;
+
+ if(dose>1000)
+   risk+=8;
+
+ risk=Math.min(99,risk);
+
+ document.getElementById("score").innerText=risk;
+
+ const after=document.getElementById("afterRisk");
+
+ if(after)
+   after.innerText=risk;
+
+ toast("Simulation completed");
+
+ initChart();
+
+}
+
+function initChart(){
+
+ const ctx=document.getElementById("chart");
+
+ if(!ctx)return;
+
+ if(chart)chart.destroy();
+
+ const multiplier=
+   selected.egfr<45?1.55:
+   selected.egfr<60?1.25:1;
+
+ chart=new Chart(ctx,{
+
+  type:"line",
+
+  data:{
+
+   labels:[
+    "0h","2h","4h","6h","8h",
+    "10h","12h","16h","20h","24h"
+   ],
+
+   datasets:[
+
+    {
+     label:"Predicted exposure",
+     data:[
+      0,
+      12*multiplier,
+      26*multiplier,
+      23*multiplier,
+      18*multiplier,
+      14*multiplier,
+      11*multiplier,
+      7*multiplier,
+      4*multiplier,
+      2*multiplier
+     ],
+     borderColor:"#1bd0b8",
+     backgroundColor:"rgba(27,208,184,.08)",
+     fill:true,
+     tension:.4
+    },
+
+    {
+     label:"Reference threshold",
+     data:Array(10).fill(25),
+     borderColor:"#f4bd50",
+     borderDash:[6,6],
+     pointRadius:0
+    }
+
+   ]
+
+  },
+
+  options:{
+
+   responsive:true,
+   maintainAspectRatio:false,
+
+   plugins:{
+    legend:{
+     labels:{
+      color:"#9bb0bf",
+      font:{size:9}
+     }
+    }
+   },
+
+   scales:{
+    x:{
+     ticks:{color:"#688095"},
+     grid:{color:"rgba(255,255,255,.04)"}
+    },
+
+    y:{
+     ticks:{color:"#688095"},
+     grid:{color:"rgba(255,255,255,.04)"}
+    }
+   }
+
+  }
+
+ });
+
+}
+
+
+/* ================= CONSENT ================= */
+
+function openConsent(){
+
+ document.getElementById("consent").style.display="flex";
+
+}
+
+function declineConsent(){
+
+ document.getElementById("consent").style.display="none";
+
+ toast("Patient consent not granted");
+
+}
+
+function sendSMS(){
+
+ document.getElementById("consent").style.display="none";
+
+ toast("Demo SMS consent request sent");
+
+ setTimeout(()=>{
+
+  const approved=
+    confirm(
+      "Demo patient response:\n\n" +
+      "Allow PharmaTwin to access available medical information?\n\n" +
+      "OK = Roziman\nCancel = Rozimasman"
+    );
+
+  if(approved){
+
+   toast("Consent granted — importing data");
+
+  }else{
+
+   toast("Consent declined");
+
+  }
+
+ },700);
+
+}
+
+
+/* ================= SEARCH ================= */
+
+function globalSearch(value){
+
+ if(!value)return;
+
+ const found=patients.find(p=>
+   p.name.toLowerCase().includes(value.toLowerCase())||
+   p.mrn.toLowerCase().includes(value.toLowerCase())||
+   p.diagnosis.toLowerCase().includes(value.toLowerCase())
+ );
+
+ if(found){
+   selected=found;
+   page("patients");
+ }
+
+}
+
+
+/* ================= UI ================= */
+
+function toggleSidebar(){
+
+ document.getElementById("sidebar")
+   .classList.toggle("open");
+
+}
+
+function toast(message){
+
+ const el=document.createElement("div");
+
+ el.innerText=message;
+
+ el.style.position="fixed";
+ el.style.right="22px";
+ el.style.bottom="22px";
+ el.style.padding="12px 17px";
+ el.style.background="#10283a";
+ el.style.border="1px solid #31536b";
+ el.style.borderRadius="8px";
+ el.style.fontSize="10px";
+ el.style.zIndex="999";
+
+ document.body.appendChild(el);
+
+ setTimeout(()=>el.remove(),2600);
+
+}
+
+
+/* START */
+
+document.getElementById("auth").style.display="flex";
+
+</script>
+
+</body>
+</html>
+```
