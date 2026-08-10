@@ -1,0 +1,1547 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>PharmaTwin AI — Digital Patient Twin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= LOGIN ================= -->
+
+<div id="authScreen" class="auth-screen">
+
+  <div class="auth-card">
+
+    <div class="brand">
+      <div class="brand-icon">✦</div>
+      <div>
+        <h2>PharmaTwin</h2>
+        <span>AI Clinical Intelligence</span>
+      </div>
+    </div>
+
+    <div class="auth-content">
+
+      <h1>Welcome back</h1>
+      <p class="muted">
+        Access your personalized digital patient twin.
+      </p>
+
+      <label>Email</label>
+      <input id="loginEmail" type="email" placeholder="patient@example.com">
+
+      <label>Password</label>
+
+      <div class="password-box">
+        <input id="loginPassword" type="password" placeholder="••••••••">
+        <button onclick="togglePassword()">Show</button>
+      </div>
+
+      <button class="primary-btn" onclick="login()">
+        Sign in
+      </button>
+
+      <div class="divider">
+        <span>OR</span>
+      </div>
+
+      <button class="oneid-btn" onclick="openOneID()">
+        🪪 Continue with OneID
+      </button>
+
+      <p class="auth-footer">
+        Don't have an account?
+        <a onclick="showRegister()">Create account</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ================= REGISTRATION ================= -->
+
+<div id="registerScreen" class="auth-screen hidden">
+
+  <div class="auth-card">
+
+    <div class="brand">
+      <div class="brand-icon">✦</div>
+      <div>
+        <h2>PharmaTwin</h2>
+        <span>Secure registration</span>
+      </div>
+    </div>
+
+    <div class="auth-content">
+
+      <h1>Create account</h1>
+
+      <input id="regName" placeholder="Full name">
+
+      <input id="regEmail" type="email" placeholder="Email">
+
+      <input id="regPhone" placeholder="+998 XX XXX XX XX">
+
+      <input id="regPassword" type="password" placeholder="Create password">
+
+      <div class="consent-box">
+
+        <input type="checkbox" id="privacyConsent">
+
+        <label for="privacyConsent">
+          I agree to the processing of my health information
+          according to the platform's privacy policy.
+        </label>
+
+      </div>
+
+      <button class="primary-btn" onclick="register()">
+        Create account
+      </button>
+
+      <p class="auth-footer">
+        Already have an account?
+        <a onclick="showLogin()">Sign in</a>
+      </p>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ================= ONЕID CONSENT ================= -->
+
+<div id="oneidModal" class="modal hidden">
+
+  <div class="modal-card">
+
+    <div class="modal-icon">🪪</div>
+
+    <h2>Connect with OneID</h2>
+
+    <p>
+      PharmaTwin is requesting permission to access
+      selected identity and health-related information.
+    </p>
+
+    <div class="permission-list">
+
+      <div>✓ Full name</div>
+      <div>✓ Date of birth</div>
+      <div>✓ Identification information</div>
+      <div>✓ Authorized medical records</div>
+
+    </div>
+
+    <div class="sms-box">
+
+      <strong>Consent verification</strong>
+
+      <p>
+        A verification code would be sent to your
+        registered phone number.
+      </p>
+
+      <input id="smsCode" placeholder="Enter verification code">
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button class="secondary-btn" onclick="closeOneID()">
+        I don't agree
+      </button>
+
+      <button class="primary-btn" onclick="approveOneID()">
+        I agree & continue
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ================= APPLICATION ================= -->
+
+<div id="app" class="app hidden">
+
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <div class="sidebar-brand">
+
+      <div class="brand-icon">✦</div>
+
+      <div>
+        <strong>PharmaTwin</strong>
+        <small>AI Clinical Intelligence</small>
+      </div>
+
+    </div>
+
+
+    <nav>
+
+      <button class="nav-item active" onclick="showPage('overview', this)">
+        <span>◉</span> Overview
+      </button>
+
+      <button class="nav-item" onclick="showPage('twin', this)">
+        <span>🧬</span> Digital Twin
+      </button>
+
+      <button class="nav-item" onclick="showPage('medications', this)">
+        <span>💊</span> Medications
+      </button>
+
+      <button class="nav-item" onclick="showPage('labs', this)">
+        <span>🧪</span> Laboratory
+      </button>
+
+      <button class="nav-item" onclick="showPage('diseases', this)">
+        <span>🩺</span> Conditions
+      </button>
+
+      <button class="nav-item" onclick="showPage('ai', this)">
+        <span>✦</span> AI Assistant
+      </button>
+
+      <button class="nav-item" onclick="showPage('terminal', this)">
+        <span>⚠</span> Complex Conditions
+      </button>
+
+      <button class="nav-item" onclick="showPage('timeline', this)">
+        <span>◷</span> Timeline
+      </button>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <button class="nav-item">
+        ⚙ Settings
+      </button>
+
+      <button class="nav-item logout" onclick="logout()">
+        ↪ Log out
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+      <div>
+        <span class="page-label">PATIENT CENTER</span>
+        <h2 id="pageTitle">Overview</h2>
+      </div>
+
+      <div class="top-actions">
+
+        <button class="icon-btn">🔔</button>
+
+        <div class="profile-mini">
+
+          <div class="avatar">AX</div>
+
+          <div>
+            <strong>Alex Morgan</strong>
+            <small>Patient ID: PT-20481</small>
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- ================= OVERVIEW ================= -->
+
+    <section id="overview" class="page active-page">
+
+      <div class="welcome-card">
+
+        <div>
+
+          <span class="eyebrow">
+            DIGITAL PATIENT TWIN
+          </span>
+
+          <h1>Good morning, Alex.</h1>
+
+          <p>
+            Your health data has been synchronized.
+            PharmaTwin has identified several treatment
+            response patterns worth reviewing.
+          </p>
+
+        </div>
+
+        <div class="twin-orb">
+          🧬
+        </div>
+
+      </div>
+
+
+      <!-- STAT CARDS -->
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+            <span>Active conditions</span>
+            <span>🩺</span>
+          </div>
+
+          <strong>3</strong>
+
+          <small>2 stable · 1 requires monitoring</small>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+            <span>Medications</span>
+            <span>💊</span>
+          </div>
+
+          <strong>5</strong>
+
+          <small>2 recently adjusted</small>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+            <span>Lab markers</span>
+            <span>🧪</span>
+          </div>
+
+          <strong>18</strong>
+
+          <small>4 outside reference range</small>
+
+        </div>
+
+
+        <div class="stat-card">
+
+          <div class="stat-top">
+            <span>AI confidence</span>
+            <span>✦</span>
+          </div>
+
+          <strong>87%</strong>
+
+          <small>Based on available patient data</small>
+
+        </div>
+
+      </div>
+
+
+      <div class="dashboard-grid">
+
+
+        <!-- AI INSIGHT -->
+
+        <div class="panel ai-panel">
+
+          <div class="panel-header">
+
+            <div>
+
+              <span class="eyebrow">AI INSIGHT</span>
+
+              <h3>Recent treatment signal</h3>
+
+            </div>
+
+            <span class="status-dot">●</span>
+
+          </div>
+
+          <div class="ai-insight">
+
+            <div class="ai-icon">✦</div>
+
+            <div>
+
+              <strong>Potential response detected</strong>
+
+              <p>
+                A recent medication adjustment is associated
+                with an improvement in one monitored biomarker.
+              </p>
+
+              <button onclick="showPage('ai')" class="text-btn">
+                Review AI analysis →
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- HEALTH STATUS -->
+
+        <div class="panel">
+
+          <div class="panel-header">
+
+            <div>
+
+              <span class="eyebrow">HEALTH STATUS</span>
+
+              <h3>Current overview</h3>
+
+            </div>
+
+          </div>
+
+          <div class="health-bars">
+
+            <div class="health-row">
+
+              <span>Cardiovascular</span>
+
+              <div class="bar">
+                <i style="width:82%"></i>
+              </div>
+
+              <b>82</b>
+
+            </div>
+
+            <div class="health-row">
+
+              <span>Metabolic</span>
+
+              <div class="bar">
+                <i style="width:68%"></i>
+              </div>
+
+              <b>68</b>
+
+            </div>
+
+            <div class="health-row">
+
+              <span>Renal</span>
+
+              <div class="bar">
+                <i style="width:91%"></i>
+              </div>
+
+              <b>91</b>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- MEDICATION TABLE -->
+
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <span class="eyebrow">TREATMENT</span>
+
+            <h3>Current medications</h3>
+
+          </div>
+
+          <button class="outline-btn"
+                  onclick="showPage('medications')">
+            View all
+          </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Medication</th>
+                <th>Dose</th>
+                <th>Purpose</th>
+                <th>Response</th>
+                <th>Status</th>
+              </tr>
+
+            </thead>
+
+            <tbody>
+
+              <tr>
+
+                <td>
+                  <strong>Medication A</strong>
+                  <small>Example drug</small>
+                </td>
+
+                <td>10 mg</td>
+
+                <td>Condition A</td>
+
+                <td>
+                  <span class="positive">+12%</span>
+                </td>
+
+                <td>
+                  <span class="badge success">Stable</span>
+                </td>
+
+              </tr>
+
+
+              <tr>
+
+                <td>
+                  <strong>Medication B</strong>
+                  <small>Example drug</small>
+                </td>
+
+                <td>25 mg</td>
+
+                <td>Condition B</td>
+
+                <td>
+                  <span class="warning">Monitor</span>
+                </td>
+
+                <td>
+                  <span class="badge warning-bg">Review</span>
+                </td>
+
+              </tr>
+
+
+              <tr>
+
+                <td>
+                  <strong>Medication C</strong>
+                  <small>Example drug</small>
+                </td>
+
+                <td>5 mg</td>
+
+                <td>Condition C</td>
+
+                <td>
+                  <span class="positive">+8%</span>
+                </td>
+
+                <td>
+                  <span class="badge success">Stable</span>
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= DIGITAL TWIN ================= -->
+
+    <section id="twin" class="page">
+
+      <div class="section-heading">
+
+        <span class="eyebrow">PATIENT MODEL</span>
+
+        <h1>Digital Patient Twin</h1>
+
+        <p>
+          A structured representation of the patient's
+          available clinical data and treatment history.
+        </p>
+
+      </div>
+
+
+      <div class="twin-layout">
+
+        <div class="twin-visual">
+
+          <div class="human-model">
+
+            <div class="head">◉</div>
+
+            <div class="body-model">
+
+              <span class="organ heart">♥</span>
+              <span class="organ lungs">◌</span>
+              <span class="organ liver">◒</span>
+              <span class="organ kidney">◓</span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="panel">
+
+          <div class="panel-header">
+
+            <h3>Patient profile</h3>
+
+            <span class="badge success">
+              Synchronized
+            </span>
+
+          </div>
+
+          <div class="profile-grid">
+
+            <div>
+              <span>Full name</span>
+              <strong>Alex Morgan</strong>
+            </div>
+
+            <div>
+              <span>Patient ID</span>
+              <strong>PT-20481</strong>
+            </div>
+
+            <div>
+              <span>Date of birth</span>
+              <strong>•• / •• / 1998</strong>
+            </div>
+
+            <div>
+              <span>Blood type</span>
+              <strong>O+</strong>
+            </div>
+
+            <div>
+              <span>OneID status</span>
+              <strong class="positive">Connected</strong>
+            </div>
+
+            <div>
+              <span>Last synchronization</span>
+              <strong>Today, 09:42</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <h3>Biological signals</h3>
+
+        </div>
+
+        <div class="signal-grid">
+
+          <div class="signal-card">
+            <span>Blood pressure</span>
+            <strong>124 / 78</strong>
+            <small>Within target range</small>
+          </div>
+
+          <div class="signal-card">
+            <span>Heart rate</span>
+            <strong>72 bpm</strong>
+            <small>Stable</small>
+          </div>
+
+          <div class="signal-card">
+            <span>Glucose</span>
+            <strong>108 mg/dL</strong>
+            <small>Requires monitoring</small>
+          </div>
+
+          <div class="signal-card">
+            <span>Creatinine</span>
+            <strong>0.9 mg/dL</strong>
+            <small>Within reference range</small>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= MEDICATIONS ================= -->
+
+    <section id="medications" class="page">
+
+      <div class="section-heading">
+
+        <span class="eyebrow">PHARMACOLOGY</span>
+
+        <h1>Medication Intelligence</h1>
+
+        <p>
+          Track treatment history, response patterns,
+          potential adverse effects and medication changes.
+        </p>
+
+      </div>
+
+
+      <div class="medication-cards">
+
+        <div class="med-card">
+
+          <div class="med-header">
+
+            <div class="pill-icon">💊</div>
+
+            <div>
+              <h3>Medication A</h3>
+              <span>10 mg · once daily</span>
+            </div>
+
+            <span class="badge success">Active</span>
+
+          </div>
+
+          <div class="med-data">
+
+            <div>
+              <span>Expected benefit</span>
+              <strong>Improved marker A</strong>
+            </div>
+
+            <div>
+              <span>Observed response</span>
+              <strong class="positive">+12%</strong>
+            </div>
+
+            <div>
+              <span>Side effects</span>
+              <strong>None reported</strong>
+            </div>
+
+            <div>
+              <span>Started</span>
+              <strong>12 Jun 2026</strong>
+            </div>
+
+          </div>
+
+          <button class="outline-btn">
+            View treatment history
+          </button>
+
+        </div>
+
+
+        <div class="med-card">
+
+          <div class="med-header">
+
+            <div class="pill-icon">💊</div>
+
+            <div>
+              <h3>Medication B</h3>
+              <span>25 mg · once daily</span>
+            </div>
+
+            <span class="badge warning-bg">Review</span>
+
+          </div>
+
+          <div class="med-data">
+
+            <div>
+              <span>Expected benefit</span>
+              <strong>Reduce marker B</strong>
+            </div>
+
+            <div>
+              <span>Observed response</span>
+              <strong>Unclear</strong>
+            </div>
+
+            <div>
+              <span>Side effects</span>
+              <strong class="warning">Possible fatigue</strong>
+            </div>
+
+            <div>
+              <span>Started</span>
+              <strong>28 Jun 2026</strong>
+            </div>
+
+          </div>
+
+          <button class="outline-btn">
+            Review medication
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <span class="eyebrow">TREATMENT SAFETY</span>
+
+            <h3>Medication signals</h3>
+
+          </div>
+
+        </div>
+
+        <div class="alert-list">
+
+          <div class="alert-item warning-alert">
+
+            <span>⚠</span>
+
+            <div>
+
+              <strong>Potential adverse-effect signal</strong>
+
+              <p>
+                A change in fatigue score was recorded
+                after the latest medication adjustment.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="alert-item info-alert">
+
+            <span>✦</span>
+
+            <div>
+
+              <strong>Positive treatment response</strong>
+
+              <p>
+                Biomarker A improved after the previous
+                treatment interval.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= LABS ================= -->
+
+    <section id="labs" class="page">
+
+      <div class="section-heading">
+
+        <span class="eyebrow">LABORATORY</span>
+
+        <h1>Laboratory Intelligence</h1>
+
+        <p>
+          Monitor changes in laboratory markers over time.
+        </p>
+
+      </div>
+
+
+      <div class="lab-grid">
+
+        <div class="lab-card">
+
+          <div class="lab-top">
+            <span>Glucose</span>
+            <span class="warning">↑</span>
+          </div>
+
+          <strong>108</strong>
+
+          <small>mg/dL · reference 70–100</small>
+
+          <div class="mini-chart">
+            <span style="height:30%"></span>
+            <span style="height:45%"></span>
+            <span style="height:42%"></span>
+            <span style="height:62%"></span>
+            <span style="height:70%"></span>
+          </div>
+
+        </div>
+
+
+        <div class="lab-card">
+
+          <div class="lab-top">
+            <span>Creatinine</span>
+            <span class="positive">✓</span>
+          </div>
+
+          <strong>0.9</strong>
+
+          <small>mg/dL · within range</small>
+
+          <div class="mini-chart">
+            <span style="height:60%"></span>
+            <span style="height:58%"></span>
+            <span style="height:59%"></span>
+            <span style="height:57%"></span>
+            <span style="height:56%"></span>
+          </div>
+
+        </div>
+
+
+        <div class="lab-card">
+
+          <div class="lab-top">
+            <span>Hemoglobin</span>
+            <span class="positive">✓</span>
+          </div>
+
+          <strong>14.2</strong>
+
+          <small>g/dL · within range</small>
+
+          <div class="mini-chart">
+            <span style="height:50%"></span>
+            <span style="height:52%"></span>
+            <span style="height:55%"></span>
+            <span style="height:57%"></span>
+            <span style="height:59%"></span>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel">
+
+        <div class="panel-header">
+
+          <h3>Latest laboratory results</h3>
+
+          <button class="outline-btn">
+            Export
+          </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Marker</th>
+                <th>Result</th>
+                <th>Reference</th>
+                <th>Change</th>
+                <th>Interpretation</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr>
+                <td><strong>Glucose</strong></td>
+                <td>108 mg/dL</td>
+                <td>70–100</td>
+                <td class="warning">+8%</td>
+                <td>Monitor</td>
+              </tr>
+
+              <tr>
+                <td><strong>Creatinine</strong></td>
+                <td>0.9 mg/dL</td>
+                <td>0.6–1.2</td>
+                <td class="positive">−3%</td>
+                <td>Stable</td>
+              </tr>
+
+              <tr>
+                <td><strong>Hemoglobin</strong></td>
+                <td>14.2 g/dL</td>
+                <td>13–17</td>
+                <td class="positive">+2%</td>
+                <td>Stable</td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= DISEASES ================= -->
+
+    <section id="diseases" class="page">
+
+      <div class="section-heading">
+
+        <span class="eyebrow">CLINICAL PROFILE</span>
+
+        <h1>Conditions & Diagnoses</h1>
+
+        <p>
+          Patient conditions, progression and monitoring status.
+        </p>
+
+      </div>
+
+
+      <div class="condition-grid">
+
+        <div class="condition-card stable">
+
+          <span class="condition-status">STABLE</span>
+
+          <h3>Condition A</h3>
+
+          <p>
+            Current monitoring indicates a stable state.
+          </p>
+
+          <div class="condition-footer">
+
+            <span>Risk level</span>
+
+            <strong>Low</strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="condition-card monitor">
+
+          <span class="condition-status">MONITOR</span>
+
+          <h3>Condition B</h3>
+
+          <p>
+            Recent biomarker changes require continued monitoring.
+          </p>
+
+          <div class="condition-footer">
+
+            <span>Risk level</span>
+
+            <strong>Moderate</strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="condition-card">
+
+          <span class="condition-status">HISTORY</span>
+
+          <h3>Condition C</h3>
+
+          <p>
+            Previous condition recorded in medical history.
+          </p>
+
+          <div class="condition-footer">
+
+            <span>Current status</span>
+
+            <strong>Controlled</strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= AI ================= -->
+
+    <section id="ai" class="page">
+
+      <div class="section-heading">
+
+        <span class="eyebrow">PHARMATWIN AI</span>
+
+        <h1>Clinical Intelligence</h1>
+
+        <p>
+          Analyze available patient data and identify
+          treatment-response patterns.
+        </p>
+
+      </div>
+
+
+      <div class="ai-layout">
+
+        <div class="panel ai-chat">
+
+          <div class="chat-header">
+
+            <div class="ai-avatar">✦</div>
+
+            <div>
+
+              <strong>PharmaTwin AI</strong>
+
+              <small>
+                Clinical decision-support prototype
+              </small>
+
+            </div>
+
+            <span class="online">● Online</span>
+
+          </div>
+
+
+          <div id="chatMessages" class="chat-messages">
+
+            <div class="message ai-message">
+
+              <div class="message-avatar">✦</div>
+
+              <div>
+
+                <p>
+                  I analyzed the available treatment,
+                  laboratory and condition data.
+                </p>
+
+                <p>
+                  I can help identify patterns such as
+                  medication-response relationships,
+                  laboratory changes and potential signals.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="chat-input">
+
+            <input
+              id="aiInput"
+              placeholder="Ask about the patient's data..."
+              onkeydown="if(event.key==='Enter') askAI()"
+            >
+
+            <button onclick="askAI()">➤</button>
+
+          </div>
+
+        </div>
+
+
+        <div class="panel">
+
+          <div class="panel-header">
+
+            <div>
+
+              <span class="eyebrow">AI SUMMARY</span>
+
+              <h3>Detected signals</h3>
+
+            </div>
+
+          </div>
+
+
+          <div class="signal-list">
+
+            <div class="signal">
+
+              <span class="signal-number">01</span>
+
+              <div>
+
+                <strong>Medication response</strong>
+
+                <p>
+                  Positive change detected in biomarker A.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="signal">
+
+              <span class="signal-number">02</span>
+
+              <div>
+
+                <strong>Laboratory change</strong>
+
+                <p>
+                  Glucose is above the example reference range.
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="signal">
+
+              <span class="signal-number">03</span>
+
+              <div>
+
+                <strong>Monitoring required</strong>
+
+                <p>
+                  Condition B requires continued observation.
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="ai-disclaimer">
+
+            ⚠ Prototype only. AI output must not be used
+            as a substitute for a qualified medical professional.
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= TERMINAL ================= -->
+
+    <section id="terminal" class="page">
+
+      <div class="terminal-banner">
+
+        <div>
+
+          <span class="eyebrow">SPECIALIZED CARE</span>
+
+          <h1>Complex & Serious Conditions</h1>
+
+          <p>
+            A dedicated workspace for patients requiring
+            intensive monitoring and individualized care planning.
+          </p>
+
+        </div>
+
+        <div class="terminal-symbol">✚</div>
+
+      </div>
+
+
+      <div class="dashboard-grid">
+
+        <div class="panel">
+
+          <div class="panel-header">
+
+            <h3>Individual patient assessment</h3>
+
+            <span class="badge warning-bg">
+              Requires specialist review
+            </span>
+
+          </div>
+
+          <div class="assessment">
+
+            <div>
+              <span>Current clinical state</span>
+              <strong>Under monitoring</strong>
+            </div>
+
+            <div>
+              <span>Recent progression</span>
+              <strong>Needs assessment</strong>
+            </div>
+
+            <div>
+              <span>Care priority</span>
+              <strong>High</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="panel">
+
+          <div class="panel-header">
+
+            <h3>Personalized care notes</h3>
+
+          </div>
+
+          <textarea
+            class="care-notes"
+            placeholder="Authorized clinician notes..."
+          ></textarea>
+
+          <button class="primary-btn">
+            Save clinical note
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="panel prognosis-panel">
+
+        <div class="panel-header">
+
+          <div>
+
+            <span class="eyebrow">PROGNOSIS</span>
+
+            <h3>Outcome monitoring</h3>
+
+          </div>
+
+        </div>
+
+        <div class="prognosis-warning">
+
+          <strong>Important</strong>
+
+          <p>
+            Prognosis and survival estimates must never be
+            presented as certain predictions. A future version
+            may use validated clinical models and clinician
+            review to provide evidence-based risk estimates.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= TIMELINE ================= -->
+
+    <section id="timeline" class="page">
+
+      <div class="section-heading">
+
+        <span class="eyebrow">LONGITUDINAL DATA</span>
+
+        <h1>Treatment Timeline</h1>
+
+        <p>
+          A chronological view of major clinical events.
+        </p>
+
+      </div>
+
+
+      <div class="timeline">
+
+        <div class="timeline-item">
+
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-date">
+            12 Jun 2026
+          </div>
+
+          <div class="timeline-content">
+
+            <span class="timeline-tag medication">
+              MEDICATION
+            </span>
+
+            <h3>Medication A started</h3>
+
+            <p>
+              Treatment initiated for Condition A.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-date">
+            28 Jun 2026
+          </div>
+
+          <div class="timeline-content">
+
+            <span class="timeline-tag lab">
+              LAB
+            </span>
+
+            <h3>Laboratory assessment</h3>
+
+            <p>
+              Routine laboratory markers recorded.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-date">
+            05 Jul 2026
+          </div>
+
+          <div class="timeline-content">
+
+            <span class="timeline-tag ai">
+              AI SIGNAL
+            </span>
+
+            <h3>Treatment response detected</h3>
+
+            <p>
+              Biomarker A showed a positive change.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="timeline-item">
+
+          <div class="timeline-dot"></div>
+
+          <div class="timeline-date">
+            Today
+          </div>
+
+          <div class="timeline-content">
+
+            <span class="timeline-tag monitoring">
+              MONITORING
+            </span>
+
+            <h3>Continued observation</h3>
+
+            <p>
+              Patient data requires continued monitoring.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+</div>
+
+
+<script src="app.js"></script>
+
+</body>
+</html>
+```
