@@ -2242,3 +2242,30 @@ if(token && patient){
 
 </body>
 </html>
+<script>
+const API_URL = "https://pharmatwin-ai-4.onrender.com";
+
+async function apiRequest(endpoint, options = {}) {
+    try {
+        const response = await fetch(API_URL + endpoint, {
+            headers: {
+                "Content-Type": "application/json",
+                ...(options.headers || {})
+            },
+            ...options
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || "Server error");
+        }
+
+        return data;
+    } catch (error) {
+        console.error("API Error:", error);
+        alert("Server bilan bog‘lanishda xatolik: " + error.message);
+        throw error;
+    }
+}
+</script>
