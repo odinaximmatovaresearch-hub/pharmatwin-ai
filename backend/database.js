@@ -1,4 +1,3 @@
-```javascript
 const Database = require("better-sqlite3");
 
 const db = new Database("pharmatwin.db");
@@ -6,7 +5,6 @@ const db = new Database("pharmatwin.db");
 db.pragma("foreign_keys = ON");
 
 db.exec(`
-
 CREATE TABLE IF NOT EXISTS patients (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     full_name TEXT NOT NULL,
@@ -102,8 +100,6 @@ CREATE TABLE IF NOT EXISTS ai_insights (
         REFERENCES patients(id)
         ON DELETE CASCADE
 );
-
 `);
 
 module.exports = db;
-```
