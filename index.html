@@ -1,1551 +1,2244 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>PharmaTwin AI — Digital Patient Twin</title>
+<title>PharmaTwin AI — Digital Patient Twin</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="style.css">
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Inter,sans-serif;
+    background:#f5f7fb;
+    color:#172033;
+}
+
+button,input,select,textarea{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* AUTH */
+
+.auth-screen{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+    background:
+        radial-gradient(circle at top left,#dff5ff,transparent 35%),
+        radial-gradient(circle at bottom right,#e8e2ff,transparent 35%),
+        #f5f7fb;
+}
+
+.auth-card{
+    width:100%;
+    max-width:460px;
+    background:white;
+    border:1px solid #e5e9f2;
+    border-radius:24px;
+    padding:38px;
+    box-shadow:0 25px 70px rgba(31,45,75,.12);
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:30px;
+}
+
+.logo-icon{
+    width:46px;
+    height:46px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    color:white;
+    font-size:22px;
+    font-weight:800;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+}
+
+.logo h2{
+    font-size:21px;
+}
+
+.logo span{
+    color:#718096;
+    font-size:11px;
+    display:block;
+    margin-top:3px;
+}
+
+.auth-card h1{
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.subtitle{
+    color:#718096;
+    margin-bottom:28px;
+    line-height:1.6;
+}
+
+.tabs{
+    display:flex;
+    background:#f2f4f8;
+    padding:4px;
+    border-radius:12px;
+    margin-bottom:22px;
+}
+
+.tabs button{
+    width:50%;
+    border:0;
+    padding:11px;
+    border-radius:9px;
+    background:transparent;
+}
+
+.tabs button.active{
+    background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    font-weight:700;
+}
+
+.form-group{
+    margin-bottom:16px;
+}
+
+.form-group label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:7px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea{
+    width:100%;
+    padding:13px 14px;
+    border:1px solid #dce2ec;
+    border-radius:10px;
+    outline:none;
+    background:white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.1);
+}
+
+.primary-btn{
+    width:100%;
+    border:0;
+    padding:14px;
+    border-radius:11px;
+    color:white;
+    background:#2563eb;
+    font-weight:700;
+    margin-top:6px;
+}
+
+.primary-btn:hover{
+    background:#1d4ed8;
+}
+
+.consent{
+    margin:18px 0;
+    padding:14px;
+    border:1px solid #e1e7f0;
+    border-radius:12px;
+    background:#f8fafc;
+    font-size:12px;
+    line-height:1.5;
+}
+
+.consent input{
+    margin-right:8px;
+}
+
+/* APP */
+
+.app{
+    min-height:100vh;
+    display:flex;
+}
+
+.sidebar{
+    width:250px;
+    background:#111827;
+    color:white;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+    padding:24px 16px;
+}
+
+.sidebar .logo{
+    padding:0 10px;
+}
+
+.sidebar .logo span{
+    color:#9ca3af;
+}
+
+.nav{
+    margin-top:35px;
+}
+
+.nav button{
+    width:100%;
+    border:0;
+    background:transparent;
+    color:#9ca3af;
+    text-align:left;
+    padding:13px 14px;
+    border-radius:10px;
+    margin-bottom:5px;
+}
+
+.nav button:hover,
+.nav button.active{
+    background:#1f2937;
+    color:white;
+}
+
+.logout{
+    position:absolute;
+    bottom:25px;
+    left:16px;
+    right:16px;
+    border:1px solid #374151;
+    background:transparent;
+    color:#d1d5db;
+    padding:11px;
+    border-radius:10px;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:250px;
+    width:calc(100% - 250px);
+}
+
+.topbar{
+    height:72px;
+    background:white;
+    border-bottom:1px solid #e7ebf2;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 35px;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    color:#64748b;
+}
+
+.dot{
+    width:8px;
+    height:8px;
+    background:#22c55e;
+    border-radius:50%;
+}
+
+.user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    background:#dbeafe;
+    color:#1d4ed8;
+    border-radius:50%;
+    font-weight:700;
+}
+
+.content{
+    padding:35px;
+    max-width:1500px;
+}
+
+.page{
+    display:none;
+}
+
+.page.active{
+    display:block;
+}
+
+.heading{
+    margin-bottom:28px;
+}
+
+.heading small{
+    color:#2563eb;
+    font-weight:700;
+    letter-spacing:1px;
+    font-size:11px;
+}
+
+.heading h1{
+    font-size:30px;
+    margin:7px 0;
+}
+
+.heading p{
+    color:#718096;
+}
+
+/* CARDS */
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.card{
+    background:white;
+    border:1px solid #e6eaf1;
+    border-radius:16px;
+    padding:22px;
+    box-shadow:0 5px 20px rgba(31,45,75,.04);
+}
+
+.card-title{
+    font-size:13px;
+    color:#718096;
+    margin-bottom:12px;
+}
+
+.card-value{
+    font-size:27px;
+    font-weight:800;
+}
+
+.card-note{
+    margin-top:8px;
+    font-size:12px;
+    color:#64748b;
+}
+
+.blue{
+    color:#2563eb;
+}
+
+.red{
+    color:#dc2626;
+}
+
+.green{
+    color:#16a34a;
+}
+
+.purple{
+    color:#7c3aed;
+}
+
+.two{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+    margin-top:20px;
+}
+
+.section-title{
+    font-size:17px;
+    margin-bottom:17px;
+}
+
+.list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.list-item{
+    padding:14px;
+    border:1px solid #e7ebf2;
+    border-radius:11px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.badge{
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:700;
+    background:#eff6ff;
+    color:#2563eb;
+}
+
+.badge.red{
+    background:#fef2f2;
+}
+
+.badge.green{
+    background:#f0fdf4;
+}
+
+.badge.yellow{
+    background:#fffbeb;
+    color:#b45309;
+}
+
+/* TABLE */
+
+.table-wrap{
+    background:white;
+    border:1px solid #e6eaf1;
+    border-radius:16px;
+    overflow:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:16px;
+    text-align:left;
+    border-bottom:1px solid #edf0f5;
+    font-size:13px;
+}
+
+th{
+    color:#718096;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+}
+
+/* BUTTON */
+
+.small-btn{
+    border:0;
+    padding:9px 13px;
+    border-radius:9px;
+    background:#2563eb;
+    color:white;
+    font-size:12px;
+    font-weight:600;
+}
+
+.outline-btn{
+    background:white;
+    color:#2563eb;
+    border:1px solid #bfdbfe;
+}
+
+/* TIMELINE */
+
+.timeline{
+    position:relative;
+    margin-left:10px;
+}
+
+.timeline:before{
+    content:"";
+    position:absolute;
+    left:8px;
+    top:0;
+    bottom:0;
+    width:2px;
+    background:#e2e8f0;
+}
+
+.timeline-item{
+    position:relative;
+    padding-left:35px;
+    margin-bottom:25px;
+}
+
+.timeline-dot{
+    position:absolute;
+    left:2px;
+    top:5px;
+    width:14px;
+    height:14px;
+    background:#2563eb;
+    border:3px solid #dbeafe;
+    border-radius:50%;
+}
+
+.timeline-date{
+    font-size:11px;
+    color:#64748b;
+    margin-bottom:5px;
+}
+
+.timeline-content{
+    background:white;
+    border:1px solid #e6eaf1;
+    padding:18px;
+    border-radius:13px;
+}
+
+.timeline-tag{
+    font-size:10px;
+    font-weight:700;
+    color:#2563eb;
+}
+
+.timeline-content h3{
+    margin:7px 0;
+}
+
+.timeline-content p{
+    color:#64748b;
+    font-size:13px;
+}
+
+/* AI */
+
+.ai-box{
+    background:linear-gradient(135deg,#eff6ff,#f5f3ff);
+    border:1px solid #dbeafe;
+    border-radius:18px;
+    padding:25px;
+    margin-bottom:20px;
+}
+
+.ai-box h2{
+    margin-bottom:8px;
+}
+
+.ai-box p{
+    color:#64748b;
+    line-height:1.6;
+}
+
+.insight{
+    padding:18px;
+    border:1px solid #e6eaf1;
+    border-radius:13px;
+    background:white;
+    margin-bottom:12px;
+}
+
+.insight h3{
+    margin-bottom:7px;
+}
+
+.insight p{
+    color:#64748b;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.warning{
+    padding:18px;
+    border-radius:13px;
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    color:#9a3412;
+    margin-bottom:20px;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(15,23,42,.5);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+    z-index:20;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-card{
+    background:white;
+    width:100%;
+    max-width:500px;
+    border-radius:18px;
+    padding:27px;
+}
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.close{
+    border:0;
+    background:#f1f5f9;
+    border-radius:8px;
+    width:32px;
+    height:32px;
+}
+
+/* MOBILE */
+
+@media(max-width:1000px){
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .two{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+    .sidebar{
+        width:70px;
+        padding:15px 8px;
+    }
+
+    .sidebar .logo h2,
+    .sidebar .logo span,
+    .nav button span{
+        display:none;
+    }
+
+    .main{
+        margin-left:70px;
+        width:calc(100% - 70px);
+    }
+
+    .content{
+        padding:20px;
+    }
+
+    .topbar{
+        padding:0 18px;
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<!-- ================= LOGIN ================= -->
+<!-- ================= AUTH ================= -->
 
 <div id="authScreen" class="auth-screen">
 
-  <div class="auth-card">
+<div class="auth-card">
 
-    <div class="brand">
-      <div class="brand-icon">✦</div>
-      <div>
+<div class="logo">
+    <div class="logo-icon">P</div>
+    <div>
         <h2>PharmaTwin</h2>
-        <span>AI Clinical Intelligence</span>
-      </div>
+        <span>AI DIGITAL PATIENT TWIN</span>
     </div>
+</div>
 
-    <div class="auth-content">
+<div class="tabs">
+    <button id="loginTab" class="active" onclick="showLogin()">Login</button>
+    <button id="registerTab" onclick="showRegister()">Register</button>
+</div>
 
-      <h1>Welcome back</h1>
-      <p class="muted">
-        Access your personalized digital patient twin.
-      </p>
+<div id="loginForm">
 
-      <label>Email</label>
-      <input id="loginEmail" type="email" placeholder="patient@example.com">
+<h1>Welcome back</h1>
+<p class="subtitle">
+Access your personalized patient health environment.
+</p>
 
-      <label>Password</label>
+<div class="form-group">
+<label>Email</label>
+<input id="loginEmail" type="email" placeholder="you@example.com">
+</div>
 
-      <div class="password-box">
-        <input id="loginPassword" type="password" placeholder="••••••••">
-        <button onclick="togglePassword()">Show</button>
-      </div>
+<div class="form-group">
+<label>Password</label>
+<input id="loginPassword" type="password" placeholder="••••••••">
+</div>
 
-      <button class="primary-btn" onclick="login()">
-        Sign in
-      </button>
-
-      <div class="divider">
-        <span>OR</span>
-      </div>
-
-      <button class="oneid-btn" onclick="openOneID()">
-        🪪 Continue with OneID
-      </button>
-
-      <p class="auth-footer">
-        Don't have an account?
-        <a onclick="showRegister()">Create account</a>
-      </p>
-
-    </div>
-  </div>
+<button class="primary-btn" onclick="login()">Sign in</button>
 
 </div>
 
 
-<!-- ================= REGISTRATION ================= -->
+<div id="registerForm" class="hidden">
 
-<div id="registerScreen" class="auth-screen hidden">
+<h1>Create account</h1>
 
-  <div class="auth-card">
+<p class="subtitle">
+Create your secure PharmaTwin patient account.
+</p>
 
-    <div class="brand">
-      <div class="brand-icon">✦</div>
-      <div>
-        <h2>PharmaTwin</h2>
-        <span>Secure registration</span>
-      </div>
-    </div>
+<div class="form-group">
+<label>Full name</label>
+<input id="registerName" placeholder="Your full name">
+</div>
 
-    <div class="auth-content">
+<div class="form-group">
+<label>Email</label>
+<input id="registerEmail" type="email" placeholder="you@example.com">
+</div>
 
-      <h1>Create account</h1>
+<div class="form-group">
+<label>Phone</label>
+<input id="registerPhone" placeholder="+998 ...">
+</div>
 
-      <input id="regName" placeholder="Full name">
+<div class="form-group">
+<label>Password</label>
+<input id="registerPassword" type="password" placeholder="Create a password">
+</div>
 
-      <input id="regEmail" type="email" placeholder="Email">
+<div class="consent">
 
-      <input id="regPhone" placeholder="+998 XX XXX XX XX">
-
-      <input id="regPassword" type="password" placeholder="Create password">
-
-      <div class="consent-box">
-
-        <input type="checkbox" id="privacyConsent">
-
-        <label for="privacyConsent">
-          I agree to the processing of my health information
-          according to the platform's privacy policy.
-        </label>
-
-      </div>
-
-      <button class="primary-btn" onclick="register()">
-        Create account
-      </button>
-
-      <p class="auth-footer">
-        Already have an account?
-        <a onclick="showLogin()">Sign in</a>
-      </p>
-
-    </div>
-  </div>
+<label>
+<input id="registerConsent" type="checkbox">
+I agree to allow PharmaTwin to process my submitted health information for the purposes described in the application.
+</label>
 
 </div>
 
+<button class="primary-btn" onclick="register()">
+Create account
+</button>
 
-<!-- ================= ONЕID CONSENT ================= -->
+</div>
 
-<div id="oneidModal" class="modal hidden">
-
-  <div class="modal-card">
-
-    <div class="modal-icon">🪪</div>
-
-    <h2>Connect with OneID</h2>
-
-    <p>
-      PharmaTwin is requesting permission to access
-      selected identity and health-related information.
-    </p>
-
-    <div class="permission-list">
-
-      <div>✓ Full name</div>
-      <div>✓ Date of birth</div>
-      <div>✓ Identification information</div>
-      <div>✓ Authorized medical records</div>
-
-    </div>
-
-    <div class="sms-box">
-
-      <strong>Consent verification</strong>
-
-      <p>
-        A verification code would be sent to your
-        registered phone number.
-      </p>
-
-      <input id="smsCode" placeholder="Enter verification code">
-
-    </div>
-
-    <div class="modal-actions">
-
-      <button class="secondary-btn" onclick="closeOneID()">
-        I don't agree
-      </button>
-
-      <button class="primary-btn" onclick="approveOneID()">
-        I agree & continue
-      </button>
-
-    </div>
-
-  </div>
+</div>
 </div>
 
 
-<!-- ================= APPLICATION ================= -->
+<!-- ================= APP ================= -->
 
 <div id="app" class="app hidden">
 
+<aside class="sidebar">
 
-  <!-- SIDEBAR -->
+<div class="logo">
+<div class="logo-icon">P</div>
+<div>
+<h2>PharmaTwin</h2>
+<span>AI PATIENT TWIN</span>
+</div>
+</div>
 
-  <aside class="sidebar">
+<nav class="nav">
 
-    <div class="sidebar-brand">
+<button class="active" onclick="navigate('dashboard',this)">
+<span>◉ Dashboard</span>
+</button>
 
-      <div class="brand-icon">✦</div>
+<button onclick="navigate('profile',this)">
+<span>👤 Patient Profile</span>
+</button>
 
-      <div>
-        <strong>PharmaTwin</strong>
-        <small>AI Clinical Intelligence</small>
-      </div>
+<button onclick="navigate('diseases',this)">
+<span>🧬 Conditions</span>
+</button>
 
-    </div>
+<button onclick="navigate('medications',this)">
+<span>💊 Medications</span>
+</button>
 
+<button onclick="navigate('labs',this)">
+<span>🧪 Laboratory</span>
+</button>
 
-    <nav>
+<button onclick="navigate('effects',this)">
+<span>⚠ Side Effects</span>
+</button>
 
-      <button class="nav-item active" onclick="showPage('overview', this)">
-        <span>◉</span> Overview
-      </button>
+<button onclick="navigate('timeline',this)">
+<span>◷ Timeline</span>
+</button>
 
-      <button class="nav-item" onclick="showPage('twin', this)">
-        <span>🧬</span> Digital Twin
-      </button>
+<button onclick="navigate('ai',this)">
+<span>✦ AI Analysis</span>
+</button>
 
-      <button class="nav-item" onclick="showPage('medications', this)">
-        <span>💊</span> Medications
-      </button>
+</nav>
 
-      <button class="nav-item" onclick="showPage('labs', this)">
-        <span>🧪</span> Laboratory
-      </button>
+<button class="logout" onclick="logout()">
+Logout
+</button>
 
-      <button class="nav-item" onclick="showPage('diseases', this)">
-        <span>🩺</span> Conditions
-      </button>
+</aside>
 
-      <button class="nav-item" onclick="showPage('ai', this)">
-        <span>✦</span> AI Assistant
-      </button>
 
-      <button class="nav-item" onclick="showPage('terminal', this)">
-        <span>⚠</span> Complex Conditions
-      </button>
+<main class="main">
 
-      <button class="nav-item" onclick="showPage('timeline', this)">
-        <span>◷</span> Timeline
-      </button>
+<header class="topbar">
 
-    </nav>
+<div class="status">
+<div class="dot"></div>
+PharmaTwin system online
+</div>
 
+<div class="user">
+<div id="topName">Patient</div>
+<div id="avatar" class="avatar">P</div>
+</div>
 
-    <div class="sidebar-bottom">
+</header>
 
-      <button class="nav-item">
-        ⚙ Settings
-      </button>
 
-      <button class="nav-item logout" onclick="logout()">
-        ↪ Log out
-      </button>
+<div class="content">
 
-    </div>
 
-  </aside>
+<!-- DASHBOARD -->
 
+<section id="dashboard" class="page active">
 
-  <!-- MAIN -->
+<div class="heading">
+<small>PATIENT OVERVIEW</small>
+<h1 id="welcomeName">Welcome</h1>
+<p>Your longitudinal health profile and treatment intelligence.</p>
+</div>
 
-  <main class="main">
+<div class="grid">
 
+<div class="card">
+<div class="card-title">Conditions</div>
+<div id="statDiseases" class="card-value blue">0</div>
+<div class="card-note">Recorded conditions</div>
+</div>
 
-    <!-- TOPBAR -->
+<div class="card">
+<div class="card-title">Medications</div>
+<div id="statMeds" class="card-value purple">0</div>
+<div class="card-note">Medication records</div>
+</div>
 
-    <header class="topbar">
-
-      <div>
-        <span class="page-label">PATIENT CENTER</span>
-        <h2 id="pageTitle">Overview</h2>
-      </div>
-
-      <div class="top-actions">
-
-        <button class="icon-btn">🔔</button>
-
-        <div class="profile-mini">
-
-          <div class="avatar">AX</div>
-
-          <div>
-            <strong>Alex Morgan</strong>
-            <small>Patient ID: PT-20481</small>
-          </div>
-
-        </div>
-
-      </div>
-
-    </header>
-
-
-    <!-- ================= OVERVIEW ================= -->
-
-    <section id="overview" class="page active-page">
-
-      <div class="welcome-card">
-
-        <div>
-
-          <span class="eyebrow">
-            DIGITAL PATIENT TWIN
-          </span>
-
-          <h1>Good morning, Alex.</h1>
-
-          <p>
-            Your health data has been synchronized.
-            PharmaTwin has identified several treatment
-            response patterns worth reviewing.
-          </p>
-
-        </div>
-
-        <div class="twin-orb">
-          🧬
-        </div>
-
-      </div>
-
-
-      <!-- STAT CARDS -->
-
-      <div class="stats-grid">
-
-        <div class="stat-card">
-
-          <div class="stat-top">
-            <span>Active conditions</span>
-            <span>🩺</span>
-          </div>
-
-          <strong>3</strong>
-
-          <small>2 stable · 1 requires monitoring</small>
-
-        </div>
-
-
-        <div class="stat-card">
-
-          <div class="stat-top">
-            <span>Medications</span>
-            <span>💊</span>
-          </div>
-
-          <strong>5</strong>
-
-          <small>2 recently adjusted</small>
-
-        </div>
-
-
-        <div class="stat-card">
-
-          <div class="stat-top">
-            <span>Lab markers</span>
-            <span>🧪</span>
-          </div>
-
-          <strong>18</strong>
-
-          <small>4 outside reference range</small>
-
-        </div>
-
-
-        <div class="stat-card">
-
-          <div class="stat-top">
-            <span>AI confidence</span>
-            <span>✦</span>
-          </div>
-
-          <strong>87%</strong>
-
-          <small>Based on available patient data</small>
-
-        </div>
-
-      </div>
-
-
-      <div class="dashboard-grid">
-
-
-        <!-- AI INSIGHT -->
-
-        <div class="panel ai-panel">
-
-          <div class="panel-header">
-
-            <div>
-
-              <span class="eyebrow">AI INSIGHT</span>
-
-              <h3>Recent treatment signal</h3>
-
-            </div>
-
-            <span class="status-dot">●</span>
-
-          </div>
-
-          <div class="ai-insight">
-
-            <div class="ai-icon">✦</div>
-
-            <div>
-
-              <strong>Potential response detected</strong>
-
-              <p>
-                A recent medication adjustment is associated
-                with an improvement in one monitored biomarker.
-              </p>
-
-              <button onclick="showPage('ai')" class="text-btn">
-                Review AI analysis →
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- HEALTH STATUS -->
-
-        <div class="panel">
-
-          <div class="panel-header">
-
-            <div>
-
-              <span class="eyebrow">HEALTH STATUS</span>
-
-              <h3>Current overview</h3>
-
-            </div>
-
-          </div>
-
-          <div class="health-bars">
-
-            <div class="health-row">
-
-              <span>Cardiovascular</span>
-
-              <div class="bar">
-                <i style="width:82%"></i>
-              </div>
-
-              <b>82</b>
-
-            </div>
-
-            <div class="health-row">
-
-              <span>Metabolic</span>
-
-              <div class="bar">
-                <i style="width:68%"></i>
-              </div>
-
-              <b>68</b>
-
-            </div>
-
-            <div class="health-row">
-
-              <span>Renal</span>
-
-              <div class="bar">
-                <i style="width:91%"></i>
-              </div>
-
-              <b>91</b>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- MEDICATION TABLE -->
-
-      <div class="panel">
-
-        <div class="panel-header">
-
-          <div>
-
-            <span class="eyebrow">TREATMENT</span>
-
-            <h3>Current medications</h3>
-
-          </div>
-
-          <button class="outline-btn"
-                  onclick="showPage('medications')">
-            View all
-          </button>
-
-        </div>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>Medication</th>
-                <th>Dose</th>
-                <th>Purpose</th>
-                <th>Response</th>
-                <th>Status</th>
-              </tr>
-
-            </thead>
-
-            <tbody>
-
-              <tr>
-
-                <td>
-                  <strong>Medication A</strong>
-                  <small>Example drug</small>
-                </td>
-
-                <td>10 mg</td>
-
-                <td>Condition A</td>
-
-                <td>
-                  <span class="positive">+12%</span>
-                </td>
-
-                <td>
-                  <span class="badge success">Stable</span>
-                </td>
-
-              </tr>
-
-
-              <tr>
-
-                <td>
-                  <strong>Medication B</strong>
-                  <small>Example drug</small>
-                </td>
-
-                <td>25 mg</td>
-
-                <td>Condition B</td>
-
-                <td>
-                  <span class="warning">Monitor</span>
-                </td>
-
-                <td>
-                  <span class="badge warning-bg">Review</span>
-                </td>
-
-              </tr>
-
-
-              <tr>
-
-                <td>
-                  <strong>Medication C</strong>
-                  <small>Example drug</small>
-                </td>
-
-                <td>5 mg</td>
-
-                <td>Condition C</td>
-
-                <td>
-                  <span class="positive">+8%</span>
-                </td>
-
-                <td>
-                  <span class="badge success">Stable</span>
-                </td>
-
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= DIGITAL TWIN ================= -->
-
-    <section id="twin" class="page">
-
-      <div class="section-heading">
-
-        <span class="eyebrow">PATIENT MODEL</span>
-
-        <h1>Digital Patient Twin</h1>
-
-        <p>
-          A structured representation of the patient's
-          available clinical data and treatment history.
-        </p>
-
-      </div>
-
-
-      <div class="twin-layout">
-
-        <div class="twin-visual">
-
-          <div class="human-model">
-
-            <div class="head">◉</div>
-
-            <div class="body-model">
-
-              <span class="organ heart">♥</span>
-              <span class="organ lungs">◌</span>
-              <span class="organ liver">◒</span>
-              <span class="organ kidney">◓</span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="panel-header">
-
-            <h3>Patient profile</h3>
-
-            <span class="badge success">
-              Synchronized
-            </span>
-
-          </div>
-
-          <div class="profile-grid">
-
-            <div>
-              <span>Full name</span>
-              <strong>Alex Morgan</strong>
-            </div>
-
-            <div>
-              <span>Patient ID</span>
-              <strong>PT-20481</strong>
-            </div>
-
-            <div>
-              <span>Date of birth</span>
-              <strong>•• / •• / 1998</strong>
-            </div>
-
-            <div>
-              <span>Blood type</span>
-              <strong>O+</strong>
-            </div>
-
-            <div>
-              <span>OneID status</span>
-              <strong class="positive">Connected</strong>
-            </div>
-
-            <div>
-              <span>Last synchronization</span>
-              <strong>Today, 09:42</strong>
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="panel">
-
-        <div class="panel-header">
-
-          <h3>Biological signals</h3>
-
-        </div>
-
-        <div class="signal-grid">
-
-          <div class="signal-card">
-            <span>Blood pressure</span>
-            <strong>124 / 78</strong>
-            <small>Within target range</small>
-          </div>
-
-          <div class="signal-card">
-            <span>Heart rate</span>
-            <strong>72 bpm</strong>
-            <small>Stable</small>
-          </div>
-
-          <div class="signal-card">
-            <span>Glucose</span>
-            <strong>108 mg/dL</strong>
-            <small>Requires monitoring</small>
-          </div>
-
-          <div class="signal-card">
-            <span>Creatinine</span>
-            <strong>0.9 mg/dL</strong>
-            <small>Within reference range</small>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= MEDICATIONS ================= -->
-
-    <section id="medications" class="page">
-
-      <div class="section-heading">
-
-        <span class="eyebrow">PHARMACOLOGY</span>
-
-        <h1>Medication Intelligence</h1>
-
-        <p>
-          Track treatment history, response patterns,
-          potential adverse effects and medication changes.
-        </p>
-
-      </div>
-
-
-      <div class="medication-cards">
-
-        <div class="med-card">
-
-          <div class="med-header">
-
-            <div class="pill-icon">💊</div>
-
-            <div>
-              <h3>Medication A</h3>
-              <span>10 mg · once daily</span>
-            </div>
-
-            <span class="badge success">Active</span>
-
-          </div>
-
-          <div class="med-data">
-
-            <div>
-              <span>Expected benefit</span>
-              <strong>Improved marker A</strong>
-            </div>
-
-            <div>
-              <span>Observed response</span>
-              <strong class="positive">+12%</strong>
-            </div>
-
-            <div>
-              <span>Side effects</span>
-              <strong>None reported</strong>
-            </div>
-
-            <div>
-              <span>Started</span>
-              <strong>12 Jun 2026</strong>
-            </div>
-
-          </div>
-
-          <button class="outline-btn">
-            View treatment history
-          </button>
-
-        </div>
-
-
-        <div class="med-card">
-
-          <div class="med-header">
-
-            <div class="pill-icon">💊</div>
-
-            <div>
-              <h3>Medication B</h3>
-              <span>25 mg · once daily</span>
-            </div>
-
-            <span class="badge warning-bg">Review</span>
-
-          </div>
-
-          <div class="med-data">
-
-            <div>
-              <span>Expected benefit</span>
-              <strong>Reduce marker B</strong>
-            </div>
-
-            <div>
-              <span>Observed response</span>
-              <strong>Unclear</strong>
-            </div>
-
-            <div>
-              <span>Side effects</span>
-              <strong class="warning">Possible fatigue</strong>
-            </div>
-
-            <div>
-              <span>Started</span>
-              <strong>28 Jun 2026</strong>
-            </div>
-
-          </div>
-
-          <button class="outline-btn">
-            Review medication
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="panel">
-
-        <div class="panel-header">
-
-          <div>
-
-            <span class="eyebrow">TREATMENT SAFETY</span>
-
-            <h3>Medication signals</h3>
-
-          </div>
-
-        </div>
-
-        <div class="alert-list">
-
-          <div class="alert-item warning-alert">
-
-            <span>⚠</span>
-
-            <div>
-
-              <strong>Potential adverse-effect signal</strong>
-
-              <p>
-                A change in fatigue score was recorded
-                after the latest medication adjustment.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="alert-item info-alert">
-
-            <span>✦</span>
-
-            <div>
-
-              <strong>Positive treatment response</strong>
-
-              <p>
-                Biomarker A improved after the previous
-                treatment interval.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= LABS ================= -->
-
-    <section id="labs" class="page">
-
-      <div class="section-heading">
-
-        <span class="eyebrow">LABORATORY</span>
-
-        <h1>Laboratory Intelligence</h1>
-
-        <p>
-          Monitor changes in laboratory markers over time.
-        </p>
-
-      </div>
-
-
-      <div class="lab-grid">
-
-        <div class="lab-card">
-
-          <div class="lab-top">
-            <span>Glucose</span>
-            <span class="warning">↑</span>
-          </div>
-
-          <strong>108</strong>
-
-          <small>mg/dL · reference 70–100</small>
-
-          <div class="mini-chart">
-            <span style="height:30%"></span>
-            <span style="height:45%"></span>
-            <span style="height:42%"></span>
-            <span style="height:62%"></span>
-            <span style="height:70%"></span>
-          </div>
-
-        </div>
-
-
-        <div class="lab-card">
-
-          <div class="lab-top">
-            <span>Creatinine</span>
-            <span class="positive">✓</span>
-          </div>
-
-          <strong>0.9</strong>
-
-          <small>mg/dL · within range</small>
-
-          <div class="mini-chart">
-            <span style="height:60%"></span>
-            <span style="height:58%"></span>
-            <span style="height:59%"></span>
-            <span style="height:57%"></span>
-            <span style="height:56%"></span>
-          </div>
-
-        </div>
-
-
-        <div class="lab-card">
-
-          <div class="lab-top">
-            <span>Hemoglobin</span>
-            <span class="positive">✓</span>
-          </div>
-
-          <strong>14.2</strong>
-
-          <small>g/dL · within range</small>
-
-          <div class="mini-chart">
-            <span style="height:50%"></span>
-            <span style="height:52%"></span>
-            <span style="height:55%"></span>
-            <span style="height:57%"></span>
-            <span style="height:59%"></span>
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <div class="panel">
-
-        <div class="panel-header">
-
-          <h3>Latest laboratory results</h3>
-
-          <button class="outline-btn">
-            Export
-          </button>
-
-        </div>
-
-        <div class="table-wrap">
-
-          <table>
-
-            <thead>
-              <tr>
-                <th>Marker</th>
-                <th>Result</th>
-                <th>Reference</th>
-                <th>Change</th>
-                <th>Interpretation</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              <tr>
-                <td><strong>Glucose</strong></td>
-                <td>108 mg/dL</td>
-                <td>70–100</td>
-                <td class="warning">+8%</td>
-                <td>Monitor</td>
-              </tr>
-
-              <tr>
-                <td><strong>Creatinine</strong></td>
-                <td>0.9 mg/dL</td>
-                <td>0.6–1.2</td>
-                <td class="positive">−3%</td>
-                <td>Stable</td>
-              </tr>
-
-              <tr>
-                <td><strong>Hemoglobin</strong></td>
-                <td>14.2 g/dL</td>
-                <td>13–17</td>
-                <td class="positive">+2%</td>
-                <td>Stable</td>
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= DISEASES ================= -->
-
-    <section id="diseases" class="page">
-
-      <div class="section-heading">
-
-        <span class="eyebrow">CLINICAL PROFILE</span>
-
-        <h1>Conditions & Diagnoses</h1>
-
-        <p>
-          Patient conditions, progression and monitoring status.
-        </p>
-
-      </div>
-
-
-      <div class="condition-grid">
-
-        <div class="condition-card stable">
-
-          <span class="condition-status">STABLE</span>
-
-          <h3>Condition A</h3>
-
-          <p>
-            Current monitoring indicates a stable state.
-          </p>
-
-          <div class="condition-footer">
-
-            <span>Risk level</span>
-
-            <strong>Low</strong>
-
-          </div>
-
-        </div>
-
-
-        <div class="condition-card monitor">
-
-          <span class="condition-status">MONITOR</span>
-
-          <h3>Condition B</h3>
-
-          <p>
-            Recent biomarker changes require continued monitoring.
-          </p>
-
-          <div class="condition-footer">
-
-            <span>Risk level</span>
-
-            <strong>Moderate</strong>
-
-          </div>
-
-        </div>
-
-
-        <div class="condition-card">
-
-          <span class="condition-status">HISTORY</span>
-
-          <h3>Condition C</h3>
-
-          <p>
-            Previous condition recorded in medical history.
-          </p>
-
-          <div class="condition-footer">
-
-            <span>Current status</span>
-
-            <strong>Controlled</strong>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= AI ================= -->
-
-    <section id="ai" class="page">
-
-      <div class="section-heading">
-
-        <span class="eyebrow">PHARMATWIN AI</span>
-
-        <h1>Clinical Intelligence</h1>
-
-        <p>
-          Analyze available patient data and identify
-          treatment-response patterns.
-        </p>
-
-      </div>
-
-
-      <div class="ai-layout">
-
-        <div class="panel ai-chat">
-
-          <div class="chat-header">
-
-            <div class="ai-avatar">✦</div>
-
-            <div>
-
-              <strong>PharmaTwin AI</strong>
-
-              <small>
-                Clinical decision-support prototype
-              </small>
-
-            </div>
-
-            <span class="online">● Online</span>
-
-          </div>
-
-
-          <div id="chatMessages" class="chat-messages">
-
-            <div class="message ai-message">
-
-              <div class="message-avatar">✦</div>
-
-              <div>
-
-                <p>
-                  I analyzed the available treatment,
-                  laboratory and condition data.
-                </p>
-
-                <p>
-                  I can help identify patterns such as
-                  medication-response relationships,
-                  laboratory changes and potential signals.
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div class="chat-input">
-
-            <input
-              id="aiInput"
-              placeholder="Ask about the patient's data..."
-              onkeydown="if(event.key==='Enter') askAI()"
-            >
-
-            <button onclick="askAI()">➤</button>
-
-          </div>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="panel-header">
-
-            <div>
-
-              <span class="eyebrow">AI SUMMARY</span>
-
-              <h3>Detected signals</h3>
-
-            </div>
-
-          </div>
-
-
-          <div class="signal-list">
-
-            <div class="signal">
-
-              <span class="signal-number">01</span>
-
-              <div>
-
-                <strong>Medication response</strong>
-
-                <p>
-                  Positive change detected in biomarker A.
-                </p>
-
-              </div>
-
-            </div>
-
-
-            <div class="signal">
-
-              <span class="signal-number">02</span>
-
-              <div>
-
-                <strong>Laboratory change</strong>
-
-                <p>
-                  Glucose is above the example reference range.
-                </p>
-
-              </div>
-
-            </div>
-
-
-            <div class="signal">
-
-              <span class="signal-number">03</span>
-
-              <div>
-
-                <strong>Monitoring required</strong>
-
-                <p>
-                  Condition B requires continued observation.
-                </p>
-
-              </div>
-
-            </div>
-
-          </div>
-
-          <div class="ai-disclaimer">
-
-            ⚠ Prototype only. AI output must not be used
-            as a substitute for a qualified medical professional.
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= TERMINAL ================= -->
-
-    <section id="terminal" class="page">
-
-      <div class="terminal-banner">
-
-        <div>
-
-          <span class="eyebrow">SPECIALIZED CARE</span>
-
-          <h1>Complex & Serious Conditions</h1>
-
-          <p>
-            A dedicated workspace for patients requiring
-            intensive monitoring and individualized care planning.
-          </p>
-
-        </div>
-
-        <div class="terminal-symbol">✚</div>
-
-      </div>
-
-
-      <div class="dashboard-grid">
-
-        <div class="panel">
-
-          <div class="panel-header">
-
-            <h3>Individual patient assessment</h3>
-
-            <span class="badge warning-bg">
-              Requires specialist review
-            </span>
-
-          </div>
-
-          <div class="assessment">
-
-            <div>
-              <span>Current clinical state</span>
-              <strong>Under monitoring</strong>
-            </div>
-
-            <div>
-              <span>Recent progression</span>
-              <strong>Needs assessment</strong>
-            </div>
-
-            <div>
-              <span>Care priority</span>
-              <strong>High</strong>
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="panel-header">
-
-            <h3>Personalized care notes</h3>
-
-          </div>
-
-          <textarea
-            class="care-notes"
-            placeholder="Authorized clinician notes..."
-          ></textarea>
-
-          <button class="primary-btn">
-            Save clinical note
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <div class="panel prognosis-panel">
-
-        <div class="panel-header">
-
-          <div>
-
-            <span class="eyebrow">PROGNOSIS</span>
-
-            <h3>Outcome monitoring</h3>
-
-          </div>
-
-        </div>
-
-        <div class="prognosis-warning">
-
-          <strong>Important</strong>
-
-          <p>
-            Prognosis and survival estimates must never be
-            presented as certain predictions. A future version
-            may use validated clinical models and clinician
-            review to provide evidence-based risk estimates.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ================= TIMELINE ================= -->
-
-    <section id="timeline" class="page">
-
-      <div class="section-heading">
-
-        <span class="eyebrow">LONGITUDINAL DATA</span>
-
-        <h1>Treatment Timeline</h1>
-
-        <p>
-          A chronological view of major clinical events.
-        </p>
-
-      </div>
-
-
-      <div class="timeline">
-
-        <div class="timeline-item">
-
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-date">
-            12 Jun 2026
-          </div>
-
-          <div class="timeline-content">
-
-            <span class="timeline-tag medication">
-              MEDICATION
-            </span>
-
-            <h3>Medication A started</h3>
-
-            <p>
-              Treatment initiated for Condition A.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="timeline-item">
-
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-date">
-            28 Jun 2026
-          </div>
-
-          <div class="timeline-content">
-
-            <span class="timeline-tag lab">
-              LAB
-            </span>
-
-            <h3>Laboratory assessment</h3>
-
-            <p>
-              Routine laboratory markers recorded.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="timeline-item">
-
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-date">
-            05 Jul 2026
-          </div>
-
-          <div class="timeline-content">
-
-            <span class="timeline-tag ai">
-              AI SIGNAL
-            </span>
-
-            <h3>Treatment response detected</h3>
-
-            <p>
-              Biomarker A showed a positive change.
-            </p>
-
-          </div>
-
-        </div>
-
-
-        <div class="timeline-item">
-
-          <div class="timeline-dot"></div>
-
-          <div class="timeline-date">
-            Today
-          </div>
-
-          <div class="timeline-content">
-
-            <span class="timeline-tag monitoring">
-              MONITORING
-            </span>
-
-            <h3>Continued observation</h3>
-
-            <p>
-              Patient data requires continued monitoring.
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-  </main>
+<div class="card">
+<div class="card-title">Lab results</div>
+<div id="statLabs" class="card-value green">0</div>
+<div class="card-note">Recorded markers</div>
+</div>
+
+<div class="card">
+<div class="card-title">Side effects</div>
+<div id="statEffects" class="card-value red">0</div>
+<div class="card-note">Reported observations</div>
+</div>
 
 </div>
 
 
-<script src="app.js"></script>
-<script>
-const API_URL = "https://pharmatwin-ai-4.onrender.com";
+<div class="two">
 
-console.log("PharmaTwin API:", API_URL);
+<div class="card">
+
+<h2 class="section-title">Recent medications</h2>
+
+<div id="dashboardMeds" class="list">
+<p class="card-note">Loading...</p>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2 class="section-title">Safety status</h2>
+
+<div class="warning">
+<strong>Clinical decision support</strong>
+<p style="margin-top:7px;font-size:12px">
+AI-generated information is for decision support only. Medication doses must not be changed without a qualified healthcare professional.
+</p>
+</div>
+
+<button class="small-btn" onclick="navigate('ai')">
+Open AI analysis
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section id="profile" class="page">
+
+<div class="heading">
+<small>IDENTITY</small>
+<h1>Patient Profile</h1>
+<p>Your personal and consent information.</p>
+</div>
+
+<div class="card">
+
+<div class="grid">
+
+<div>
+<div class="card-title">Full name</div>
+<strong id="profileName">—</strong>
+</div>
+
+<div>
+<div class="card-title">Email</div>
+<strong id="profileEmail">—</strong>
+</div>
+
+<div>
+<div class="card-title">Phone</div>
+<strong id="profilePhone">—</strong>
+</div>
+
+<div>
+<div class="card-title">Blood type</div>
+<strong id="profileBlood">Not provided</strong>
+</div>
+
+</div>
+
+<hr style="border:0;border-top:1px solid #edf0f5;margin:25px 0">
+
+<h3 class="section-title">Identity & consent</h3>
+
+<div class="list">
+
+<div class="list-item">
+<span>OneID connection</span>
+<span id="oneidStatus" class="badge yellow">Not connected</span>
+</div>
+
+<div class="list-item">
+<span>Health-data consent</span>
+<span id="consentStatus" class="badge yellow">Not provided</span>
+</div>
+
+</div>
+
+<div style="margin-top:20px">
+
+<button class="small-btn outline-btn" onclick="openConsent()">
+Manage consent
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- DISEASES -->
+
+<section id="diseases" class="page">
+
+<div class="heading">
+<small>CLINICAL PROFILE</small>
+<h1>Conditions</h1>
+<p>Recorded diseases and clinical conditions.</p>
+</div>
+
+<div style="margin-bottom:18px">
+<button class="small-btn" onclick="openDiseaseModal()">+ Add condition</button>
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Condition</th>
+<th>Status</th>
+<th>Severity</th>
+<th>Diagnosed</th>
+</tr>
+</thead>
+
+<tbody id="diseaseTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- MEDICATIONS -->
+
+<section id="medications" class="page">
+
+<div class="heading">
+<small>PHARMACOTHERAPY</small>
+<h1>Medications</h1>
+<p>Current and historical medication records.</p>
+</div>
+
+<div style="margin-bottom:18px">
+<button class="small-btn" onclick="openMedicationModal()">+ Add medication</button>
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Medication</th>
+<th>Dose</th>
+<th>Frequency</th>
+<th>Purpose</th>
+<th>Status</th>
+</tr>
+</thead>
+
+<tbody id="medicationTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- LABS -->
+
+<section id="labs" class="page">
+
+<div class="heading">
+<small>BIOMARKERS</small>
+<h1>Laboratory Results</h1>
+<p>Track laboratory measurements over time.</p>
+</div>
+
+<div style="margin-bottom:18px">
+<button class="small-btn" onclick="openLabModal()">+ Add result</button>
+</div>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Marker</th>
+<th>Value</th>
+<th>Unit</th>
+<th>Reference</th>
+<th>Date</th>
+</tr>
+</thead>
+
+<tbody id="labTable"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- EFFECTS -->
+
+<section id="effects" class="page">
+
+<div class="heading">
+<small>SAFETY MONITORING</small>
+<h1>Side Effects</h1>
+<p>Observed effects associated with treatment.</p>
+</div>
+
+<div style="margin-bottom:18px">
+<button class="small-btn" onclick="openEffectModal()">+ Report side effect</button>
+</div>
+
+<div id="effectsList"></div>
+
+</section>
+
+
+<!-- TIMELINE -->
+
+<section id="timeline" class="page">
+
+<div class="heading">
+<small>LONGITUDINAL DATA</small>
+<h1>Treatment Timeline</h1>
+<p>A chronological view of major clinical events.</p>
+</div>
+
+<div class="timeline" id="timelineList"></div>
+
+</section>
+
+
+<!-- AI -->
+
+<section id="ai" class="page">
+
+<div class="heading">
+<small>PHARMATWIN INTELLIGENCE</small>
+<h1>AI Clinical Analysis</h1>
+<p>Structured analysis of the available patient data.</p>
+</div>
+
+<div class="ai-box">
+
+<h2>✦ Generate patient analysis</h2>
+
+<p>
+PharmaTwin can organize available medication, condition,
+laboratory and side-effect data into clinical signals for review.
+</p>
+
+<button class="small-btn" style="margin-top:18px" onclick="runAI()">
+Run analysis
+</button>
+
+</div>
+
+<div class="warning">
+<strong>Important safety notice</strong>
+<p style="margin-top:7px;font-size:13px">
+This prototype does not diagnose disease, predict an exact survival
+time, or independently change medication dosage. Any treatment
+change must be reviewed by a qualified healthcare professional.
+</p>
+</div>
+
+<div id="aiResults"></div>
+
+</section>
+
+
+</div>
+</main>
+</div>
+
+
+<!-- ================= MODALS ================= -->
+
+<div id="modal" class="modal">
+
+<div class="modal-card">
+
+<div class="modal-header">
+<h2 id="modalTitle">Add</h2>
+<button class="close" onclick="closeModal()">×</button>
+</div>
+
+<div id="modalBody"></div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   PHARMATWIN FRONTEND
+===================================================== */
+
+/*
+IMPORTANT:
+Replace this URL with your actual Render backend URL.
+Example:
+https://pharmatwin-api-3.onrender.com
+*/
+
+const API_BASE = "https://pharmatwin-api-3.onrender.com";
+
+let token = localStorage.getItem("pharmatwin_token");
+let patient = JSON.parse(localStorage.getItem("pharmatwin_patient") || "null");
+
+
+// ================= AUTH =================
+
+function showLogin(){
+
+    document.getElementById("loginForm").classList.remove("hidden");
+    document.getElementById("registerForm").classList.add("hidden");
+
+    document.getElementById("loginTab").classList.add("active");
+    document.getElementById("registerTab").classList.remove("active");
+}
+
+
+function showRegister(){
+
+    document.getElementById("loginForm").classList.add("hidden");
+    document.getElementById("registerForm").classList.remove("hidden");
+
+    document.getElementById("loginTab").classList.remove("active");
+    document.getElementById("registerTab").classList.add("active");
+}
+
+
+async function register(){
+
+    const full_name = document.getElementById("registerName").value.trim();
+    const email = document.getElementById("registerEmail").value.trim();
+    const phone = document.getElementById("registerPhone").value.trim();
+    const password = document.getElementById("registerPassword").value;
+    const consent = document.getElementById("registerConsent").checked;
+
+    if(!full_name || !email || !password){
+
+        alert("Please complete the required fields.");
+        return;
+    }
+
+    if(!consent){
+
+        alert("Please provide consent before creating the account.");
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/auth/register",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    full_name,
+                    email,
+                    phone,
+                    password
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if(!response.ok){
+
+            alert(data.error || "Registration failed.");
+            return;
+        }
+
+        token = data.token;
+        patient = data.patient;
+
+        localStorage.setItem("pharmatwin_token",token);
+        localStorage.setItem("pharmatwin_patient",JSON.stringify(patient));
+
+        enterApp();
+
+    }catch(error){
+
+        alert("Could not connect to PharmaTwin server.");
+        console.error(error);
+    }
+}
+
+
+async function login(){
+
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    if(!email || !password){
+
+        alert("Enter email and password.");
+        return;
+    }
+
+    try{
+
+        const response = await fetch(
+            API_BASE + "/api/auth/login",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    email,
+                    password
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if(!response.ok){
+
+            alert(data.error || "Login failed.");
+            return;
+        }
+
+        token = data.token;
+        patient = data.patient;
+
+        localStorage.setItem("pharmatwin_token",token);
+        localStorage.setItem("pharmatwin_patient",JSON.stringify(patient));
+
+        enterApp();
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Server connection failed. Make sure your Render backend is running."
+        );
+    }
+}
+
+
+function logout(){
+
+    localStorage.removeItem("pharmatwin_token");
+    localStorage.removeItem("pharmatwin_patient");
+
+    token = null;
+    patient = null;
+
+    document.getElementById("app").classList.add("hidden");
+    document.getElementById("authScreen").classList.remove("hidden");
+
+    showLogin();
+}
+
+
+// ================= APP =================
+
+function enterApp(){
+
+    document.getElementById("authScreen").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+
+    updatePatientUI();
+
+    loadDashboard();
+}
+
+
+function updatePatientUI(){
+
+    if(!patient) return;
+
+    const name = patient.full_name || "Patient";
+
+    document.getElementById("welcomeName").textContent =
+        "Welcome, " + name.split(" ")[0];
+
+    document.getElementById("topName").textContent = name;
+
+    document.getElementById("avatar").textContent =
+        name.charAt(0).toUpperCase();
+
+    document.getElementById("profileName").textContent =
+        name;
+
+    document.getElementById("profileEmail").textContent =
+        patient.email || "—";
+
+    document.getElementById("profilePhone").textContent =
+        patient.phone || "Not provided";
+}
+
+
+function navigate(page,button){
+
+    document.querySelectorAll(".page").forEach(
+        p => p.classList.remove("active")
+    );
+
+    document.getElementById(page).classList.add("active");
+
+    document.querySelectorAll(".nav button").forEach(
+        b => b.classList.remove("active")
+    );
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    if(page === "dashboard") loadDashboard();
+    if(page === "diseases") loadDiseases();
+    if(page === "medications") loadMedications();
+    if(page === "labs") loadLabs();
+    if(page === "effects") loadEffects();
+    if(page === "timeline") loadTimeline();
+    if(page === "profile") loadProfile();
+}
+
+
+// ================= API =================
+
+async function api(path,options={}){
+
+    options.headers = {
+
+        ...(options.headers || {}),
+
+        "Content-Type":"application/json",
+        "Authorization":"Bearer " + token
+
+    };
+
+    const response = await fetch(
+        API_BASE + path,
+        options
+    );
+
+    const data = await response.json();
+
+    if(response.status === 401){
+
+        logout();
+
+        throw new Error("Session expired");
+    }
+
+    if(!response.ok){
+
+        throw new Error(
+            data.error || "Request failed"
+        );
+    }
+
+    return data;
+}
+
+
+// ================= DASHBOARD =================
+
+async function loadDashboard(){
+
+    try{
+
+        const [
+            diseases,
+            medications,
+            labs,
+            effects
+        ] = await Promise.all([
+
+            api("/api/patient/diseases"),
+            api("/api/patient/medications"),
+            api("/api/patient/labs"),
+            api("/api/patient/side-effects")
+
+        ]);
+
+        document.getElementById("statDiseases").textContent =
+            diseases.length;
+
+        document.getElementById("statMeds").textContent =
+            medications.length;
+
+        document.getElementById("statLabs").textContent =
+            labs.length;
+
+        document.getElementById("statEffects").textContent =
+            effects.length;
+
+        const box =
+            document.getElementById("dashboardMeds");
+
+        if(!medications.length){
+
+            box.innerHTML =
+                '<p class="card-note">No medications recorded yet.</p>';
+
+            return;
+        }
+
+        box.innerHTML = medications.slice(0,5).map(m => `
+
+            <div class="list-item">
+
+                <div>
+                    <strong>${escapeHTML(m.name)}</strong>
+
+                    <div class="card-note">
+                        ${escapeHTML(m.dose || "Dose not recorded")}
+                    </div>
+                </div>
+
+                <span class="badge green">
+                    ${escapeHTML(m.status || "active")}
+                </span>
+
+            </div>
+
+        `).join("");
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+
+// ================= PROFILE =================
+
+async function loadProfile(){
+
+    try{
+
+        const data =
+            await api("/api/patient/profile");
+
+        document.getElementById("profileName").textContent =
+            data.full_name;
+
+        document.getElementById("profileEmail").textContent =
+            data.email;
+
+        document.getElementById("profilePhone").textContent =
+            data.phone || "Not provided";
+
+        document.getElementById("profileBlood").textContent =
+            data.blood_type || "Not provided";
+
+        document.getElementById("oneidStatus").textContent =
+            data.oneid_connected
+                ? "Connected"
+                : "Not connected";
+
+        document.getElementById("consentStatus").textContent =
+            data.consent_given
+                ? "Granted"
+                : "Not provided";
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+
+// ================= DISEASES =================
+
+async function loadDiseases(){
+
+    try{
+
+        const data =
+            await api("/api/patient/diseases");
+
+        const table =
+            document.getElementById("diseaseTable");
+
+        if(!data.length){
+
+            table.innerHTML =
+                `<tr><td colspan="4">No conditions recorded.</td></tr>`;
+
+            return;
+        }
+
+        table.innerHTML = data.map(d => `
+
+            <tr>
+
+                <td>
+                    <strong>${escapeHTML(d.name)}</strong>
+                </td>
+
+                <td>
+                    <span class="badge">
+                        ${escapeHTML(d.status || "monitoring")}
+                    </span>
+                </td>
+
+                <td>
+                    ${escapeHTML(d.severity || "—")}
+                </td>
+
+                <td>
+                    ${escapeHTML(d.diagnosed_at || "—")}
+                </td>
+
+            </tr>
+
+        `).join("");
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+
+// ================= MEDICATIONS =================
+
+async function loadMedications(){
+
+    try{
+
+        const data =
+            await api("/api/patient/medications");
+
+        const table =
+            document.getElementById("medicationTable");
+
+        if(!data.length){
+
+            table.innerHTML =
+                `<tr><td colspan="5">No medications recorded.</td></tr>`;
+
+            return;
+        }
+
+        table.innerHTML = data.map(m => `
+
+            <tr>
+
+                <td><strong>${escapeHTML(m.name)}</strong></td>
+
+                <td>${escapeHTML(m.dose || "—")}</td>
+
+                <td>${escapeHTML(m.frequency || "—")}</td>
+
+                <td>${escapeHTML(m.purpose || "—")}</td>
+
+                <td>
+                    <span class="badge green">
+                        ${escapeHTML(m.status || "active")}
+                    </span>
+                </td>
+
+            </tr>
+
+        `).join("");
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+
+// ================= LABS =================
+
+async function loadLabs(){
+
+    try{
+
+        const data =
+            await api("/api/patient/labs");
+
+        const table =
+            document.getElementById("labTable");
+
+        if(!data.length){
+
+            table.innerHTML =
+                `<tr><td colspan="5">No laboratory results recorded.</td></tr>`;
+
+            return;
+        }
+
+        table.innerHTML = data.map(l => `
+
+            <tr>
+
+                <td><strong>${escapeHTML(l.marker)}</strong></td>
+
+                <td>${escapeHTML(String(l.value ?? "—"))}</td>
+
+                <td>${escapeHTML(l.unit || "—")}</td>
+
+                <td>${escapeHTML(l.reference_range || "—")}</td>
+
+                <td>${escapeHTML(l.recorded_at || "—")}</td>
+
+            </tr>
+
+        `).join("");
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+
+// ================= SIDE EFFECTS =================
+
+async function loadEffects(){
+
+    try{
+
+        const data =
+            await api("/api/patient/side-effects");
+
+        const list =
+            document.getElementById("effectsList");
+
+        if(!data.length){
+
+            list.innerHTML =
+                '<div class="card"><p>No side effects recorded.</p></div>';
+
+            return;
+        }
+
+        list.innerHTML = data.map(e => `
+
+            <div class="insight">
+
+                <h3>
+                    ${escapeHTML(e.effect)}
+                </h3>
+
+                <p>
+                    Medication:
+                    ${escapeHTML(e.medication_name || "Not specified")}
+                </p>
+
+                <p>
+                    Severity:
+                    ${escapeHTML(e.severity || "Not specified")}
+                </p>
+
+                <p>
+                    Observed:
+                    ${escapeHTML(e.observed_at || "—")}
+                </p>
+
+            </div>
+
+        `).join("");
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+
+// ================= TIMELINE =================
+
+async function loadTimeline(){
+
+    try{
+
+        const data =
+            await api("/api/patient/timeline");
+
+        const list =
+            document.getElementById("timelineList");
+
+        if(!data.length){
+
+            list.innerHTML =
+                '<div class="card"><p>No treatment events recorded.</p></div>';
+
+            return;
+        }
+
+        list.innerHTML = data.map(e => `
+
+            <div class="timeline-item">
+
+                <div class="timeline-dot"></div>
+
+                <div class="timeline-date">
+                    ${escapeHTML(e.event_date || "Date not recorded")}
+                </div>
+
+                <div class="timeline-content">
+
+                    <span class="timeline-tag">
+                        ${escapeHTML(e.event_type)}
+                    </span>
+
+                    <h3>
+                        ${escapeHTML(e.title)}
+                    </h3>
+
+                    <p>
+                        ${escapeHTML(e.description || "")}
+                    </p>
+
+                </div>
+
+            </div>
+
+        `).join("");
+
+    }catch(error){
+
+        console.error(error);
+    }
+}
+
+
+// ================= AI =================
+
+async function runAI(){
+
+    const box =
+        document.getElementById("aiResults");
+
+    box.innerHTML =
+        '<div class="card"><p>Analyzing available patient data...</p></div>';
+
+    try{
+
+        const data =
+            await api(
+                "/api/ai/analyze",
+                {
+                    method:"POST",
+                    body:JSON.stringify({})
+                }
+            );
+
+        box.innerHTML = data.insights.map(i => `
+
+            <div class="insight">
+
+                <h3>${escapeHTML(i.title)}</h3>
+
+                <p>${escapeHTML(i.description)}</p>
+
+                <div style="margin-top:10px">
+                    Confidence:
+                    ${Math.round(i.confidence * 100)}%
+                </div>
+
+            </div>
+
+        `).join("");
+
+    }catch(error){
+
+        box.innerHTML =
+            `<div class="warning">${escapeHTML(error.message)}</div>`;
+    }
+}
+
+
+// ================= MODALS =================
+
+function openModal(title,body){
+
+    document.getElementById("modalTitle").textContent =
+        title;
+
+    document.getElementById("modalBody").innerHTML =
+        body;
+
+    document.getElementById("modal").classList.add("show");
+}
+
+
+function closeModal(){
+
+    document.getElementById("modal").classList.remove("show");
+}
+
+
+function openDiseaseModal(){
+
+    openModal(
+        "Add condition",
+        `
+
+        <div class="form-group">
+        <label>Condition name</label>
+        <input id="mDiseaseName">
+        </div>
+
+        <div class="form-group">
+        <label>Status</label>
+        <select id="mDiseaseStatus">
+            <option>monitoring</option>
+            <option>active</option>
+            <option>stable</option>
+            <option>resolved</option>
+        </select>
+        </div>
+
+        <div class="form-group">
+        <label>Severity</label>
+        <input id="mDiseaseSeverity">
+        </div>
+
+        <div class="form-group">
+        <label>Diagnosis date</label>
+        <input id="mDiseaseDate" type="date">
+        </div>
+
+        <button class="primary-btn" onclick="saveDisease()">
+        Save condition
+        </button>
+
+        `
+    );
+}
+
+
+async function saveDisease(){
+
+    try{
+
+        await api(
+            "/api/patient/diseases",
+            {
+                method:"POST",
+                body:JSON.stringify({
+
+                    name:
+                        document.getElementById("mDiseaseName").value,
+
+                    status:
+                        document.getElementById("mDiseaseStatus").value,
+
+                    severity:
+                        document.getElementById("mDiseaseSeverity").value,
+
+                    diagnosed_at:
+                        document.getElementById("mDiseaseDate").value
+
+                })
+            }
+        );
+
+        closeModal();
+        loadDiseases();
+
+    }catch(error){
+
+        alert(error.message);
+    }
+}
+
+
+function openMedicationModal(){
+
+    openModal(
+        "Add medication",
+        `
+
+        <div class="form-group">
+        <label>Medication name</label>
+        <input id="mMedName">
+        </div>
+
+        <div class="form-group">
+        <label>Dose</label>
+        <input id="mMedDose" placeholder="As prescribed">
+        </div>
+
+        <div class="form-group">
+        <label>Frequency</label>
+        <input id="mMedFrequency">
+        </div>
+
+        <div class="form-group">
+        <label>Purpose</label>
+        <input id="mMedPurpose">
+        </div>
+
+        <button class="primary-btn" onclick="saveMedication()">
+        Save medication
+        </button>
+
+        `
+    );
+}
+
+
+async function saveMedication(){
+
+    try{
+
+        await api(
+            "/api/patient/medications",
+            {
+                method:"POST",
+                body:JSON.stringify({
+
+                    name:
+                        document.getElementById("mMedName").value,
+
+                    dose:
+                        document.getElementById("mMedDose").value,
+
+                    frequency:
+                        document.getElementById("mMedFrequency").value,
+
+                    purpose:
+                        document.getElementById("mMedPurpose").value
+
+                })
+            }
+        );
+
+        closeModal();
+        loadMedications();
+
+    }catch(error){
+
+        alert(error.message);
+    }
+}
+
+
+function openLabModal(){
+
+    openModal(
+        "Add laboratory result",
+        `
+
+        <div class="form-group">
+        <label>Marker</label>
+        <input id="mLabMarker" placeholder="e.g. Hemoglobin">
+        </div>
+
+        <div class="form-group">
+        <label>Value</label>
+        <input id="mLabValue" type="number">
+        </div>
+
+        <div class="form-group">
+        <label>Unit</label>
+        <input id="mLabUnit">
+        </div>
+
+        <div class="form-group">
+        <label>Reference range</label>
+        <input id="mLabReference">
+        </div>
+
+        <button class="primary-btn" onclick="saveLab()">
+        Save result
+        </button>
+
+        `
+    );
+}
+
+
+async function saveLab(){
+
+    try{
+
+        await api(
+            "/api/patient/labs",
+            {
+                method:"POST",
+                body:JSON.stringify({
+
+                    marker:
+                        document.getElementById("mLabMarker").value,
+
+                    value:
+                        Number(document.getElementById("mLabValue").value),
+
+                    unit:
+                        document.getElementById("mLabUnit").value,
+
+                    reference_range:
+                        document.getElementById("mLabReference").value
+
+                })
+            }
+        );
+
+        closeModal();
+        loadLabs();
+
+    }catch(error){
+
+        alert(error.message);
+    }
+}
+
+
+function openEffectModal(){
+
+    openModal(
+        "Report side effect",
+        `
+
+        <div class="form-group">
+        <label>Observed effect</label>
+        <input id="mEffect">
+        </div>
+
+        <div class="form-group">
+        <label>Severity</label>
+        <select id="mEffectSeverity">
+            <option>mild</option>
+            <option>moderate</option>
+            <option>severe</option>
+        </select>
+        </div>
+
+        <div class="form-group">
+        <label>Notes</label>
+        <textarea id="mEffectNotes"></textarea>
+        </div>
+
+        <button class="primary-btn" onclick="saveEffect()">
+        Record side effect
+        </button>
+
+        `
+    );
+}
+
+
+async function saveEffect(){
+
+    try{
+
+        await api(
+            "/api/patient/side-effects",
+            {
+                method:"POST",
+                body:JSON.stringify({
+
+                    effect:
+                        document.getElementById("mEffect").value,
+
+                    severity:
+                        document.getElementById("mEffectSeverity").value,
+
+                    notes:
+                        document.getElementById("mEffectNotes").value
+
+                })
+            }
+        );
+
+        closeModal();
+        loadEffects();
+
+    }catch(error){
+
+        alert(error.message);
+    }
+}
+
+
+// ================= CONSENT =================
+
+function openConsent(){
+
+    openModal(
+        "Data consent",
+        `
+
+        <p style="line-height:1.6;color:#64748b;margin-bottom:20px">
+
+        PharmaTwin requires your permission before health information
+        is used for analysis. You can withdraw your consent according
+        to the application's privacy policy.
+
+        </p>
+
+        <button class="primary-btn" onclick="saveConsent(true)">
+        I agree
+        </button>
+
+        <button
+            class="primary-btn"
+            style="background:#f1f5f9;color:#172033;margin-top:10px"
+            onclick="saveConsent(false)"
+        >
+        I do not agree
+        </button>
+
+        `
+    );
+}
+
+
+async function saveConsent(value){
+
+    try{
+
+        await api(
+            "/api/patient/consent",
+            {
+                method:"POST",
+                body:JSON.stringify({
+                    consent:value
+                })
+            }
+        );
+
+        closeModal();
+        loadProfile();
+
+    }catch(error){
+
+        alert(error.message);
+    }
+}
+
+
+// ================= SECURITY =================
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+}
+
+
+// ================= START =================
+
+if(token && patient){
+
+    enterApp();
+
+}
+
 </script>
+
 </body>
 </html>
-```
