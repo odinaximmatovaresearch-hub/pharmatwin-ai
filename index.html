@@ -1,2271 +1,3115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>PharmaTwin AI — Digital Patient Twin</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-body{
-    font-family:Inter,sans-serif;
-    background:#f5f7fb;
-    color:#172033;
-}
-
-button,input,select,textarea{
-    font:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.hidden{
-    display:none!important;
-}
-
-/* AUTH */
-
-.auth-screen{
-    min-height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    padding:30px;
-    background:
-        radial-gradient(circle at top left,#dff5ff,transparent 35%),
-        radial-gradient(circle at bottom right,#e8e2ff,transparent 35%),
-        #f5f7fb;
-}
-
-.auth-card{
-    width:100%;
-    max-width:460px;
-    background:white;
-    border:1px solid #e5e9f2;
-    border-radius:24px;
-    padding:38px;
-    box-shadow:0 25px 70px rgba(31,45,75,.12);
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    margin-bottom:30px;
-}
-
-.logo-icon{
-    width:46px;
-    height:46px;
-    border-radius:14px;
-    display:grid;
-    place-items:center;
-    color:white;
-    font-size:22px;
-    font-weight:800;
-    background:linear-gradient(135deg,#2563eb,#7c3aed);
-}
-
-.logo h2{
-    font-size:21px;
-}
-
-.logo span{
-    color:#718096;
-    font-size:11px;
-    display:block;
-    margin-top:3px;
-}
-
-.auth-card h1{
-    font-size:30px;
-    margin-bottom:8px;
-}
-
-.subtitle{
-    color:#718096;
-    margin-bottom:28px;
-    line-height:1.6;
-}
-
-.tabs{
-    display:flex;
-    background:#f2f4f8;
-    padding:4px;
-    border-radius:12px;
-    margin-bottom:22px;
-}
-
-.tabs button{
-    width:50%;
-    border:0;
-    padding:11px;
-    border-radius:9px;
-    background:transparent;
-}
-
-.tabs button.active{
-    background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-    font-weight:700;
-}
-
-.form-group{
-    margin-bottom:16px;
-}
-
-.form-group label{
-    display:block;
-    font-size:13px;
-    font-weight:600;
-    margin-bottom:7px;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea{
-    width:100%;
-    padding:13px 14px;
-    border:1px solid #dce2ec;
-    border-radius:10px;
-    outline:none;
-    background:white;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus{
-    border-color:#2563eb;
-    box-shadow:0 0 0 3px rgba(37,99,235,.1);
-}
-
-.primary-btn{
-    width:100%;
-    border:0;
-    padding:14px;
-    border-radius:11px;
-    color:white;
-    background:#2563eb;
-    font-weight:700;
-    margin-top:6px;
-}
-
-.primary-btn:hover{
-    background:#1d4ed8;
-}
-
-.consent{
-    margin:18px 0;
-    padding:14px;
-    border:1px solid #e1e7f0;
-    border-radius:12px;
-    background:#f8fafc;
-    font-size:12px;
-    line-height:1.5;
-}
-
-.consent input{
-    margin-right:8px;
-}
-
-/* APP */
-
-.app{
-    min-height:100vh;
-    display:flex;
-}
-
-.sidebar{
-    width:250px;
-    background:#111827;
-    color:white;
-    position:fixed;
-    left:0;
-    top:0;
-    bottom:0;
-    padding:24px 16px;
-}
-
-.sidebar .logo{
-    padding:0 10px;
-}
-
-.sidebar .logo span{
-    color:#9ca3af;
-}
-
-.nav{
-    margin-top:35px;
-}
-
-.nav button{
-    width:100%;
-    border:0;
-    background:transparent;
-    color:#9ca3af;
-    text-align:left;
-    padding:13px 14px;
-    border-radius:10px;
-    margin-bottom:5px;
-}
-
-.nav button:hover,
-.nav button.active{
-    background:#1f2937;
-    color:white;
-}
-
-.logout{
-    position:absolute;
-    bottom:25px;
-    left:16px;
-    right:16px;
-    border:1px solid #374151;
-    background:transparent;
-    color:#d1d5db;
-    padding:11px;
-    border-radius:10px;
-}
-
-/* MAIN */
-
-.main{
-    margin-left:250px;
-    width:calc(100% - 250px);
-}
-
-.topbar{
-    height:72px;
-    background:white;
-    border-bottom:1px solid #e7ebf2;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 35px;
-}
-
-.status{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-size:13px;
-    color:#64748b;
-}
-
-.dot{
-    width:8px;
-    height:8px;
-    background:#22c55e;
-    border-radius:50%;
-}
-
-.user{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.avatar{
-    width:38px;
-    height:38px;
-    display:grid;
-    place-items:center;
-    background:#dbeafe;
-    color:#1d4ed8;
-    border-radius:50%;
-    font-weight:700;
-}
-
-.content{
-    padding:35px;
-    max-width:1500px;
-}
-
-.page{
-    display:none;
-}
-
-.page.active{
-    display:block;
-}
-
-.heading{
-    margin-bottom:28px;
-}
-
-.heading small{
-    color:#2563eb;
-    font-weight:700;
-    letter-spacing:1px;
-    font-size:11px;
-}
-
-.heading h1{
-    font-size:30px;
-    margin:7px 0;
-}
-
-.heading p{
-    color:#718096;
-}
-
-/* CARDS */
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:18px;
-}
-
-.card{
-    background:white;
-    border:1px solid #e6eaf1;
-    border-radius:16px;
-    padding:22px;
-    box-shadow:0 5px 20px rgba(31,45,75,.04);
-}
-
-.card-title{
-    font-size:13px;
-    color:#718096;
-    margin-bottom:12px;
-}
-
-.card-value{
-    font-size:27px;
-    font-weight:800;
-}
-
-.card-note{
-    margin-top:8px;
-    font-size:12px;
-    color:#64748b;
-}
-
-.blue{
-    color:#2563eb;
-}
-
-.red{
-    color:#dc2626;
-}
-
-.green{
-    color:#16a34a;
-}
-
-.purple{
-    color:#7c3aed;
-}
-
-.two{
-    display:grid;
-    grid-template-columns:2fr 1fr;
-    gap:20px;
-    margin-top:20px;
-}
-
-.section-title{
-    font-size:17px;
-    margin-bottom:17px;
-}
-
-.list{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-}
-
-.list-item{
-    padding:14px;
-    border:1px solid #e7ebf2;
-    border-radius:11px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.badge{
-    padding:5px 9px;
-    border-radius:20px;
-    font-size:10px;
-    font-weight:700;
-    background:#eff6ff;
-    color:#2563eb;
-}
-
-.badge.red{
-    background:#fef2f2;
-}
-
-.badge.green{
-    background:#f0fdf4;
-}
-
-.badge.yellow{
-    background:#fffbeb;
-    color:#b45309;
-}
-
-/* TABLE */
-
-.table-wrap{
-    background:white;
-    border:1px solid #e6eaf1;
-    border-radius:16px;
-    overflow:auto;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:16px;
-    text-align:left;
-    border-bottom:1px solid #edf0f5;
-    font-size:13px;
-}
-
-th{
-    color:#718096;
-    font-size:11px;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-}
-
-/* BUTTON */
-
-.small-btn{
-    border:0;
-    padding:9px 13px;
-    border-radius:9px;
-    background:#2563eb;
-    color:white;
-    font-size:12px;
-    font-weight:600;
-}
-
-.outline-btn{
-    background:white;
-    color:#2563eb;
-    border:1px solid #bfdbfe;
-}
-
-/* TIMELINE */
-
-.timeline{
-    position:relative;
-    margin-left:10px;
-}
-
-.timeline:before{
-    content:"";
-    position:absolute;
-    left:8px;
-    top:0;
-    bottom:0;
-    width:2px;
-    background:#e2e8f0;
-}
-
-.timeline-item{
-    position:relative;
-    padding-left:35px;
-    margin-bottom:25px;
-}
-
-.timeline-dot{
-    position:absolute;
-    left:2px;
-    top:5px;
-    width:14px;
-    height:14px;
-    background:#2563eb;
-    border:3px solid #dbeafe;
-    border-radius:50%;
-}
-
-.timeline-date{
-    font-size:11px;
-    color:#64748b;
-    margin-bottom:5px;
-}
-
-.timeline-content{
-    background:white;
-    border:1px solid #e6eaf1;
-    padding:18px;
-    border-radius:13px;
-}
-
-.timeline-tag{
-    font-size:10px;
-    font-weight:700;
-    color:#2563eb;
-}
-
-.timeline-content h3{
-    margin:7px 0;
-}
-
-.timeline-content p{
-    color:#64748b;
-    font-size:13px;
-}
-
-/* AI */
-
-.ai-box{
-    background:linear-gradient(135deg,#eff6ff,#f5f3ff);
-    border:1px solid #dbeafe;
-    border-radius:18px;
-    padding:25px;
-    margin-bottom:20px;
-}
-
-.ai-box h2{
-    margin-bottom:8px;
-}
-
-.ai-box p{
-    color:#64748b;
-    line-height:1.6;
-}
-
-.insight{
-    padding:18px;
-    border:1px solid #e6eaf1;
-    border-radius:13px;
-    background:white;
-    margin-bottom:12px;
-}
-
-.insight h3{
-    margin-bottom:7px;
-}
-
-.insight p{
-    color:#64748b;
-    font-size:13px;
-    line-height:1.5;
-}
-
-.warning{
-    padding:18px;
-    border-radius:13px;
-    background:#fff7ed;
-    border:1px solid #fed7aa;
-    color:#9a3412;
-    margin-bottom:20px;
-}
-
-/* MODAL */
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(15,23,42,.5);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:20px;
-    z-index:20;
-}
-
-.modal.show{
-    display:flex;
-}
-
-.modal-card{
-    background:white;
-    width:100%;
-    max-width:500px;
-    border-radius:18px;
-    padding:27px;
-}
-
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:20px;
-}
-
-.close{
-    border:0;
-    background:#f1f5f9;
-    border-radius:8px;
-    width:32px;
-    height:32px;
-}
-
-/* MOBILE */
-
-@media(max-width:1000px){
-    .grid{
-        grid-template-columns:repeat(2,1fr);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>PharmaTwin AI</title>
+
+  <meta
+    name="description"
+    content="AI-powered clinical decision support and longitudinal patient monitoring platform."
+  />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    .two{
-        grid-template-columns:1fr;
-    }
-}
-
-@media(max-width:700px){
-    .sidebar{
-        width:70px;
-        padding:15px 8px;
-    }
-
-    .sidebar .logo h2,
-    .sidebar .logo span,
-    .nav button span{
-        display:none;
+    :root {
+      --bg: #07111f;
+      --panel: #0d1b2d;
+      --panel2: #11243a;
+      --border: rgba(255,255,255,.09);
+      --text: #edf5ff;
+      --muted: #8da2b8;
+      --primary: #42d3a5;
+      --primary2: #1fa984;
+      --danger: #ff6575;
+      --warning: #f5c451;
+      --blue: #5ca9ff;
+      --shadow: 0 20px 60px rgba(0,0,0,.25);
     }
 
-    .main{
-        margin-left:70px;
-        width:calc(100% - 70px);
+    body {
+      font-family: Inter, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(66,211,165,.10), transparent 30%),
+        radial-gradient(circle at 90% 10%, rgba(92,169,255,.10), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
 
-    .content{
-        padding:20px;
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
     }
 
-    .topbar{
-        padding:0 18px;
+    button {
+      cursor: pointer;
     }
 
-    .grid{
-        grid-template-columns:1fr;
+    .hidden {
+      display: none !important;
     }
-}
-</style>
+
+    .app {
+      min-height: 100vh;
+    }
+
+    /* AUTH */
+
+    .auth-page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 30px;
+    }
+
+    .auth-card {
+      width: min(480px, 100%);
+      background: rgba(13,27,45,.94);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 34px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .brand-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--primary), #69b7ff);
+      color: #06131d;
+      font-weight: 900;
+    }
+
+    .brand h1 {
+      font-size: 22px;
+    }
+
+    .brand small {
+      color: var(--muted);
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 8px;
+      background: #091626;
+      padding: 5px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+    }
+
+    .auth-tabs button {
+      flex: 1;
+      border: 0;
+      padding: 11px;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .auth-tabs button.active {
+      background: var(--panel2);
+      color: white;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      background: #081525;
+      color: white;
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 12px 13px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--primary);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 12px 16px;
+      font-weight: 700;
+      transition: .2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #03140f;
+    }
+
+    .btn-secondary {
+      background: var(--panel2);
+      color: white;
+      border: 1px solid var(--border);
+    }
+
+    .btn-danger {
+      background: rgba(255,101,117,.14);
+      color: #ff8793;
+      border: 1px solid rgba(255,101,117,.25);
+    }
+
+    .btn-warning {
+      background: rgba(245,196,81,.15);
+      color: var(--warning);
+      border: 1px solid rgba(245,196,81,.25);
+    }
+
+    .full {
+      width: 100%;
+    }
+
+    .message {
+      padding: 11px 13px;
+      border-radius: 10px;
+      margin-top: 14px;
+      font-size: 13px;
+      background: rgba(92,169,255,.1);
+      color: #9ac9ff;
+    }
+
+    /* LAYOUT */
+
+    .shell {
+      min-height: 100vh;
+      display: flex;
+    }
+
+    .sidebar {
+      width: 250px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: rgba(6,17,30,.92);
+      border-right: 1px solid var(--border);
+      padding: 24px 16px;
+      z-index: 10;
+    }
+
+    .sidebar .brand {
+      padding: 0 10px 24px;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .nav button {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      padding: 12px 13px;
+      border-radius: 10px;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: var(--panel2);
+      color: white;
+    }
+
+    .main {
+      margin-left: 250px;
+      width: calc(100% - 250px);
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 76px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(7,17,31,.7);
+      backdrop-filter: blur(15px);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg,var(--primary),var(--blue));
+      display: grid;
+      place-items: center;
+      color: #06131d;
+      font-weight: 900;
+    }
+
+    .content {
+      padding: 32px;
+      max-width: 1500px;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .heading {
+      margin-bottom: 25px;
+    }
+
+    .heading .eyebrow {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .heading h2 {
+      font-size: 31px;
+      margin-top: 6px;
+    }
+
+    .heading p {
+      color: var(--muted);
+      margin-top: 7px;
+    }
+
+    /* CARDS */
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4,1fr);
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3,1fr);
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2,1fr);
+    }
+
+    .card {
+      background: rgba(13,27,45,.86);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 21px;
+      box-shadow: 0 12px 35px rgba(0,0,0,.13);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat-value {
+      font-size: 30px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+
+    .stat-note {
+      font-size: 12px;
+      color: var(--primary);
+      margin-top: 6px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 15px;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .badge-green {
+      color: #5ee8b8;
+      background: rgba(66,211,165,.11);
+    }
+
+    .badge-red {
+      color: #ff8996;
+      background: rgba(255,101,117,.11);
+    }
+
+    .badge-yellow {
+      color: #f6ce67;
+      background: rgba(245,196,81,.11);
+    }
+
+    .badge-blue {
+      color: #8dc7ff;
+      background: rgba(92,169,255,.11);
+    }
+
+    /* TABLE */
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 13px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* TIMELINE */
+
+    .timeline {
+      position: relative;
+      margin-left: 10px;
+    }
+
+    .timeline:before {
+      content: "";
+      position: absolute;
+      left: 9px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 38px;
+      margin-bottom: 25px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 3px;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 0 5px rgba(66,211,165,.1);
+    }
+
+    .timeline-date {
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    .timeline-content {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 15px;
+    }
+
+    /* MODAL */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.7);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-card {
+      width: min(650px,100%);
+      max-height: 90vh;
+      overflow-y: auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 25px;
+    }
+
+    /* CONSENT */
+
+    .consent-page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 25px;
+    }
+
+    .consent-card {
+      width: min(600px,100%);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 25px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+    }
+
+    .consent-icon {
+      width: 65px;
+      height: 65px;
+      display: grid;
+      place-items: center;
+      border-radius: 20px;
+      background: rgba(66,211,165,.12);
+      color: var(--primary);
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+
+    /* MOBILE */
+
+    @media(max-width:1000px) {
+      .grid-4 {
+        grid-template-columns: repeat(2,1fr);
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(2,1fr);
+      }
+    }
+
+    @media(max-width:700px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        bottom: auto;
+        position: relative;
+        border-right: 0;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .shell {
+        display: block;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+      }
+
+      .topbar {
+        padding: 0 16px;
+      }
+
+      .content {
+        padding: 18px;
+      }
+
+      .grid-4,
+      .grid-3,
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- ================= AUTH ================= -->
-
-<div id="authScreen" class="auth-screen">
-
-<div class="auth-card">
-
-<div class="logo">
-    <div class="logo-icon">P</div>
-    <div>
-        <h2>PharmaTwin</h2>
-        <span>AI DIGITAL PATIENT TWIN</span>
-    </div>
-</div>
-
-<div class="tabs">
-    <button id="loginTab" class="active" onclick="showLogin()">Login</button>
-    <button id="registerTab" onclick="showRegister()">Register</button>
-</div>
-
-<div id="loginForm">
-
-<h1>Welcome back</h1>
-<p class="subtitle">
-Access your personalized patient health environment.
-</p>
-
-<div class="form-group">
-<label>Email</label>
-<input id="loginEmail" type="email" placeholder="you@example.com">
-</div>
-
-<div class="form-group">
-<label>Password</label>
-<input id="loginPassword" type="password" placeholder="••••••••">
-</div>
-
-<button class="primary-btn" onclick="login()">Sign in</button>
-
-</div>
-
-
-<div id="registerForm" class="hidden">
-
-<h1>Create account</h1>
-
-<p class="subtitle">
-Create your secure PharmaTwin patient account.
-</p>
-
-<div class="form-group">
-<label>Full name</label>
-<input id="registerName" placeholder="Your full name">
-</div>
-
-<div class="form-group">
-<label>Email</label>
-<input id="registerEmail" type="email" placeholder="you@example.com">
-</div>
-
-<div class="form-group">
-<label>Phone</label>
-<input id="registerPhone" placeholder="+998 ...">
-</div>
-
-<div class="form-group">
-<label>Password</label>
-<input id="registerPassword" type="password" placeholder="Create a password">
-</div>
-
-<div class="consent">
-
-<label>
-<input id="registerConsent" type="checkbox">
-I agree to allow PharmaTwin to process my submitted health information for the purposes described in the application.
-</label>
-
-</div>
-
-<button class="primary-btn" onclick="register()">
-Create account
-</button>
-
-</div>
-
-</div>
-</div>
-
-
-<!-- ================= APP ================= -->
-
-<div id="app" class="app hidden">
-
-<aside class="sidebar">
-
-<div class="logo">
-<div class="logo-icon">P</div>
-<div>
-<h2>PharmaTwin</h2>
-<span>AI PATIENT TWIN</span>
-</div>
-</div>
-
-<nav class="nav">
-
-<button class="active" onclick="navigate('dashboard',this)">
-<span>◉ Dashboard</span>
-</button>
-
-<button onclick="navigate('profile',this)">
-<span>👤 Patient Profile</span>
-</button>
-
-<button onclick="navigate('diseases',this)">
-<span>🧬 Conditions</span>
-</button>
-
-<button onclick="navigate('medications',this)">
-<span>💊 Medications</span>
-</button>
-
-<button onclick="navigate('labs',this)">
-<span>🧪 Laboratory</span>
-</button>
-
-<button onclick="navigate('effects',this)">
-<span>⚠ Side Effects</span>
-</button>
-
-<button onclick="navigate('timeline',this)">
-<span>◷ Timeline</span>
-</button>
-
-<button onclick="navigate('ai',this)">
-<span>✦ AI Analysis</span>
-</button>
-
-</nav>
-
-<button class="logout" onclick="logout()">
-Logout
-</button>
-
-</aside>
-
-
-<main class="main">
-
-<header class="topbar">
-
-<div class="status">
-<div class="dot"></div>
-PharmaTwin system online
-</div>
-
-<div class="user">
-<div id="topName">Patient</div>
-<div id="avatar" class="avatar">P</div>
-</div>
-
-</header>
-
-
-<div class="content">
-
-
-<!-- DASHBOARD -->
-
-<section id="dashboard" class="page active">
-
-<div class="heading">
-<small>PATIENT OVERVIEW</small>
-<h1 id="welcomeName">Welcome</h1>
-<p>Your longitudinal health profile and treatment intelligence.</p>
-</div>
-
-<div class="grid">
-
-<div class="card">
-<div class="card-title">Conditions</div>
-<div id="statDiseases" class="card-value blue">0</div>
-<div class="card-note">Recorded conditions</div>
-</div>
-
-<div class="card">
-<div class="card-title">Medications</div>
-<div id="statMeds" class="card-value purple">0</div>
-<div class="card-note">Medication records</div>
-</div>
-
-<div class="card">
-<div class="card-title">Lab results</div>
-<div id="statLabs" class="card-value green">0</div>
-<div class="card-note">Recorded markers</div>
-</div>
-
-<div class="card">
-<div class="card-title">Side effects</div>
-<div id="statEffects" class="card-value red">0</div>
-<div class="card-note">Reported observations</div>
-</div>
-
-</div>
-
-
-<div class="two">
-
-<div class="card">
-
-<h2 class="section-title">Recent medications</h2>
-
-<div id="dashboardMeds" class="list">
-<p class="card-note">Loading...</p>
-</div>
-
-</div>
-
-<div class="card">
-
-<h2 class="section-title">Safety status</h2>
-
-<div class="warning">
-<strong>Clinical decision support</strong>
-<p style="margin-top:7px;font-size:12px">
-AI-generated information is for decision support only. Medication doses must not be changed without a qualified healthcare professional.
-</p>
-</div>
-
-<button class="small-btn" onclick="navigate('ai')">
-Open AI analysis
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- PROFILE -->
-
-<section id="profile" class="page">
-
-<div class="heading">
-<small>IDENTITY</small>
-<h1>Patient Profile</h1>
-<p>Your personal and consent information.</p>
-</div>
-
-<div class="card">
-
-<div class="grid">
-
-<div>
-<div class="card-title">Full name</div>
-<strong id="profileName">—</strong>
-</div>
-
-<div>
-<div class="card-title">Email</div>
-<strong id="profileEmail">—</strong>
-</div>
-
-<div>
-<div class="card-title">Phone</div>
-<strong id="profilePhone">—</strong>
-</div>
-
-<div>
-<div class="card-title">Blood type</div>
-<strong id="profileBlood">Not provided</strong>
-</div>
-
-</div>
-
-<hr style="border:0;border-top:1px solid #edf0f5;margin:25px 0">
-
-<h3 class="section-title">Identity & consent</h3>
-
-<div class="list">
-
-<div class="list-item">
-<span>OneID connection</span>
-<span id="oneidStatus" class="badge yellow">Not connected</span>
-</div>
-
-<div class="list-item">
-<span>Health-data consent</span>
-<span id="consentStatus" class="badge yellow">Not provided</span>
-</div>
-
-</div>
-
-<div style="margin-top:20px">
-
-<button class="small-btn outline-btn" onclick="openConsent()">
-Manage consent
-</button>
-
-</div>
-
-</div>
-
-</section>
-
-
-<!-- DISEASES -->
-
-<section id="diseases" class="page">
-
-<div class="heading">
-<small>CLINICAL PROFILE</small>
-<h1>Conditions</h1>
-<p>Recorded diseases and clinical conditions.</p>
-</div>
-
-<div style="margin-bottom:18px">
-<button class="small-btn" onclick="openDiseaseModal()">+ Add condition</button>
-</div>
-
-<div class="table-wrap">
-
-<table>
-
-<thead>
-<tr>
-<th>Condition</th>
-<th>Status</th>
-<th>Severity</th>
-<th>Diagnosed</th>
-</tr>
-</thead>
-
-<tbody id="diseaseTable"></tbody>
-
-</table>
-
-</div>
-
-</section>
-
-
-<!-- MEDICATIONS -->
-
-<section id="medications" class="page">
-
-<div class="heading">
-<small>PHARMACOTHERAPY</small>
-<h1>Medications</h1>
-<p>Current and historical medication records.</p>
-</div>
-
-<div style="margin-bottom:18px">
-<button class="small-btn" onclick="openMedicationModal()">+ Add medication</button>
-</div>
-
-<div class="table-wrap">
-
-<table>
-
-<thead>
-<tr>
-<th>Medication</th>
-<th>Dose</th>
-<th>Frequency</th>
-<th>Purpose</th>
-<th>Status</th>
-</tr>
-</thead>
-
-<tbody id="medicationTable"></tbody>
-
-</table>
-
-</div>
-
-</section>
-
-
-<!-- LABS -->
-
-<section id="labs" class="page">
-
-<div class="heading">
-<small>BIOMARKERS</small>
-<h1>Laboratory Results</h1>
-<p>Track laboratory measurements over time.</p>
-</div>
-
-<div style="margin-bottom:18px">
-<button class="small-btn" onclick="openLabModal()">+ Add result</button>
-</div>
-
-<div class="table-wrap">
-
-<table>
-
-<thead>
-<tr>
-<th>Marker</th>
-<th>Value</th>
-<th>Unit</th>
-<th>Reference</th>
-<th>Date</th>
-</tr>
-</thead>
-
-<tbody id="labTable"></tbody>
-
-</table>
-
-</div>
-
-</section>
-
-
-<!-- EFFECTS -->
-
-<section id="effects" class="page">
-
-<div class="heading">
-<small>SAFETY MONITORING</small>
-<h1>Side Effects</h1>
-<p>Observed effects associated with treatment.</p>
-</div>
-
-<div style="margin-bottom:18px">
-<button class="small-btn" onclick="openEffectModal()">+ Report side effect</button>
-</div>
-
-<div id="effectsList"></div>
-
-</section>
-
-
-<!-- TIMELINE -->
-
-<section id="timeline" class="page">
-
-<div class="heading">
-<small>LONGITUDINAL DATA</small>
-<h1>Treatment Timeline</h1>
-<p>A chronological view of major clinical events.</p>
-</div>
-
-<div class="timeline" id="timelineList"></div>
-
-</section>
-
-
-<!-- AI -->
-
-<section id="ai" class="page">
-
-<div class="heading">
-<small>PHARMATWIN INTELLIGENCE</small>
-<h1>AI Clinical Analysis</h1>
-<p>Structured analysis of the available patient data.</p>
-</div>
-
-<div class="ai-box">
-
-<h2>✦ Generate patient analysis</h2>
-
-<p>
-PharmaTwin can organize available medication, condition,
-laboratory and side-effect data into clinical signals for review.
-</p>
-
-<button class="small-btn" style="margin-top:18px" onclick="runAI()">
-Run analysis
-</button>
-
-</div>
-
-<div class="warning">
-<strong>Important safety notice</strong>
-<p style="margin-top:7px;font-size:13px">
-This prototype does not diagnose disease, predict an exact survival
-time, or independently change medication dosage. Any treatment
-change must be reviewed by a qualified healthcare professional.
-</p>
-</div>
-
-<div id="aiResults"></div>
-
-</section>
-
-
-</div>
-</main>
-</div>
-
-
-<!-- ================= MODALS ================= -->
-
-<div id="modal" class="modal">
-
-<div class="modal-card">
-
-<div class="modal-header">
-<h2 id="modalTitle">Add</h2>
-<button class="close" onclick="closeModal()">×</button>
-</div>
-
-<div id="modalBody"></div>
-
-</div>
-
-</div>
-
+<div id="root"></div>
 
 <script>
-
-/* =====================================================
-   PHARMATWIN FRONTEND
-===================================================== */
+/* ============================================================
+   PHARMATWIN AI FRONTEND
+   ============================================================ */
 
 /*
-IMPORTANT:
-Replace this URL with your actual Render backend URL.
-Example:
-https://pharmatwin-api-3.onrender.com
+  Vercel frontend -> Render backend.
+
+  CHANGE THIS URL after deploying your Render service.
 */
 
-const API_BASE = "https://pharmatwin-api-3.onrender.com";
+const API =
+  window.PHARMATWIN_API ||
+  "https://YOUR-RENDER-SERVICE.onrender.com";
 
-let token = localStorage.getItem("pharmatwin_token");
-let patient = JSON.parse(localStorage.getItem("pharmatwin_patient") || "null");
+let token =
+  localStorage.getItem("pharmatwin_token");
 
+let currentUser = null;
 
-// ================= AUTH =================
+const $ = selector =>
+  document.querySelector(selector);
 
-function showLogin(){
+const root = $("#root");
 
-    document.getElementById("loginForm").classList.remove("hidden");
-    document.getElementById("registerForm").classList.add("hidden");
+/* ============================================================
+   API HELPER
+   ============================================================ */
 
-    document.getElementById("loginTab").classList.add("active");
-    document.getElementById("registerTab").classList.remove("active");
+async function api(
+  endpoint,
+  options = {}
+) {
+
+  const headers =
+    options.headers || {};
+
+  if (
+    options.body &&
+    !(options.body instanceof FormData)
+  ) {
+    headers["Content-Type"] =
+      "application/json";
+  }
+
+  if (token) {
+    headers["Authorization"] =
+      `Bearer ${token}`;
+  }
+
+  const response =
+    await fetch(
+      `${API}${endpoint}`,
+      {
+        ...options,
+        headers
+      }
+    );
+
+  let data = {};
+
+  try {
+    data = await response.json();
+  } catch {}
+
+  if (!response.ok) {
+    throw new Error(
+      data.message ||
+      "Request failed."
+    );
+  }
+
+  return data;
 }
 
+/* ============================================================
+   AUTH SCREEN
+   ============================================================ */
 
-function showRegister(){
+function renderAuth() {
 
-    document.getElementById("loginForm").classList.add("hidden");
-    document.getElementById("registerForm").classList.remove("hidden");
+  root.innerHTML = `
+    <div class="auth-page">
 
-    document.getElementById("loginTab").classList.remove("active");
-    document.getElementById("registerTab").classList.add("active");
+      <div class="auth-card">
+
+        <div class="brand">
+          <div class="brand-icon">PT</div>
+
+          <div>
+            <h1>PharmaTwin AI</h1>
+            <small>Clinical intelligence platform</small>
+          </div>
+        </div>
+
+        <div class="auth-tabs">
+
+          <button
+            id="loginTab"
+            class="active"
+            onclick="showLogin()">
+            Login
+          </button>
+
+          <button
+            id="registerTab"
+            onclick="showRegister()">
+            Create account
+          </button>
+
+        </div>
+
+        <div id="authForm"></div>
+
+        <div
+          id="authMessage"
+          class="message hidden">
+        </div>
+
+      </div>
+
+    </div>
+  `;
+
+  showLogin();
 }
 
+function showLogin() {
 
-async function register(){
+  $("#loginTab").classList.add("active");
+  $("#registerTab").classList.remove("active");
 
-    const full_name = document.getElementById("registerName").value.trim();
-    const email = document.getElementById("registerEmail").value.trim();
-    const phone = document.getElementById("registerPhone").value.trim();
-    const password = document.getElementById("registerPassword").value;
-    const consent = document.getElementById("registerConsent").checked;
+  $("#authForm").innerHTML = `
 
-    if(!full_name || !email || !password){
+    <form onsubmit="login(event)">
 
-        alert("Please complete the required fields.");
-        return;
+      <div class="field">
+        <label>Email</label>
+        <input
+          id="loginEmail"
+          type="email"
+          required
+          placeholder="you@example.com">
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input
+          id="loginPassword"
+          type="password"
+          required
+          placeholder="••••••••">
+      </div>
+
+      <button
+        class="btn btn-primary full">
+        Sign in
+      </button>
+
+    </form>
+  `;
+}
+
+function showRegister() {
+
+  $("#loginTab").classList.remove("active");
+  $("#registerTab").classList.add("active");
+
+  $("#authForm").innerHTML = `
+
+    <form onsubmit="register(event)">
+
+      <div class="field">
+        <label>Account type</label>
+
+        <select
+          id="registerRole"
+          onchange="toggleRegisterFields()">
+
+          <option value="patient">
+            Patient
+          </option>
+
+          <option value="clinician">
+            Doctor / Clinician
+          </option>
+
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Full name</label>
+
+        <input
+          id="registerName"
+          required
+          placeholder="Full name">
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+
+        <input
+          id="registerEmail"
+          type="email"
+          required
+          placeholder="Email">
+      </div>
+
+      <div class="field">
+        <label>Phone</label>
+
+        <input
+          id="registerPhone"
+          required
+          placeholder="+998901234567">
+      </div>
+
+      <div
+        id="patientFields">
+
+        <div class="field">
+          <label>JSHSHIR</label>
+
+          <input
+            id="registerJshshir"
+            maxlength="14"
+            inputmode="numeric"
+            placeholder="14 digits">
+        </div>
+
+      </div>
+
+      <div
+        id="doctorFields"
+        class="hidden">
+
+        <div class="field">
+
+          <label>
+            Medical diploma — PDF only
+          </label>
+
+          <input
+            id="diploma"
+            type="file"
+            accept="application/pdf">
+
+        </div>
+
+        <div class="message">
+          Doctor accounts require verification
+          before accessing patient data.
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+
+        <input
+          id="registerPassword"
+          type="password"
+          minlength="8"
+          required
+          placeholder="At least 8 characters">
+      </div>
+
+      <button
+        class="btn btn-primary full">
+        Create account
+      </button>
+
+    </form>
+  `;
+}
+
+function toggleRegisterFields() {
+
+  const role =
+    $("#registerRole").value;
+
+  $("#patientFields")
+    .classList.toggle(
+      "hidden",
+      role !== "patient"
+    );
+
+  $("#doctorFields")
+    .classList.toggle(
+      "hidden",
+      role !== "clinician"
+    );
+}
+
+function authMessage(text) {
+
+  const box =
+    $("#authMessage");
+
+  box.textContent = text;
+  box.classList.remove("hidden");
+}
+
+async function login(event) {
+
+  event.preventDefault();
+
+  try {
+
+    const data =
+      await api("/api/login", {
+        method: "POST",
+
+        body: JSON.stringify({
+          email:
+            $("#loginEmail").value,
+
+          password:
+            $("#loginPassword").value
+        })
+      });
+
+    token = data.token;
+
+    localStorage.setItem(
+      "pharmatwin_token",
+      token
+    );
+
+    currentUser =
+      data.user;
+
+    renderDashboard();
+
+  } catch (error) {
+
+    authMessage(
+      error.message
+    );
+  }
+}
+
+async function register(event) {
+
+  event.preventDefault();
+
+  const role =
+    $("#registerRole").value;
+
+  const form =
+    new FormData();
+
+  form.append(
+    "full_name",
+    $("#registerName").value
+  );
+
+  form.append(
+    "email",
+    $("#registerEmail").value
+  );
+
+  form.append(
+    "phone",
+    $("#registerPhone").value
+  );
+
+  form.append(
+    "password",
+    $("#registerPassword").value
+  );
+
+  form.append(
+    "role",
+    role
+  );
+
+  if (role === "patient") {
+
+    form.append(
+      "jshshir",
+      $("#registerJshshir").value
+    );
+
+  } else {
+
+    const file =
+      $("#diploma").files[0];
+
+    if (!file) {
+
+      authMessage(
+        "Please upload your diploma PDF."
+      );
+
+      return;
     }
 
-    if(!consent){
+    form.append(
+      "diploma",
+      file
+    );
+  }
 
-        alert("Please provide consent before creating the account.");
-        return;
+  try {
+
+    const data =
+      await api(
+        "/api/register",
+        {
+          method: "POST",
+          body: form
+        }
+      );
+
+    authMessage(
+      data.message
+    );
+
+    setTimeout(
+      showLogin,
+      1200
+    );
+
+  } catch(error) {
+
+    authMessage(
+      error.message
+    );
+  }
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+
+function renderDashboard() {
+
+  root.innerHTML = `
+
+    <div class="shell">
+
+      <aside class="sidebar">
+
+        <div class="brand">
+
+          <div class="brand-icon">
+            PT
+          </div>
+
+          <div>
+            <h1>PharmaTwin</h1>
+            <small>AI Clinical Platform</small>
+          </div>
+
+        </div>
+
+        <nav class="nav">
+
+          <button
+            class="active"
+            onclick="openPage('overview', this)">
+            ◈ Overview
+          </button>
+
+          ${
+            currentUser.role === "clinician"
+              ? `
+                <button
+                  onclick="openPage('patients', this)">
+                  ◉ Patients
+                </button>
+
+                <button
+                  onclick="openPage('consent', this)">
+                  ◇ Patient Access
+                </button>
+
+                <button
+                  onclick="openPage('timeline', this)">
+                  ◌ Timeline
+                </button>
+              `
+              : ""
+          }
+
+          ${
+            currentUser.role === "patient"
+              ? `
+                <button
+                  onclick="openPage('health', this)">
+                  ♥ My Health
+                </button>
+
+                <button
+                  onclick="openPage('medications', this)">
+                  ◫ Medications
+                </button>
+
+                <button
+                  onclick="openPage('labs', this)">
+                  ▣ Lab Results
+                </button>
+              `
+              : ""
+          }
+
+          <button
+            onclick="openPage('profile', this)">
+            ◎ Profile
+          </button>
+
+          <button
+            onclick="logout()">
+            ↪ Sign out
+          </button>
+
+        </nav>
+
+      </aside>
+
+      <main class="main">
+
+        <header class="topbar">
+
+          <div>
+            <strong id="pageTitle">
+              Overview
+            </strong>
+          </div>
+
+          <div class="user-chip">
+
+            <div>
+              <div>
+                ${escapeHtml(
+                  currentUser.full_name
+                )}
+              </div>
+
+              <small class="muted">
+                ${escapeHtml(
+                  currentUser.role
+                )}
+              </small>
+            </div>
+
+            <div class="avatar">
+              ${
+                currentUser.full_name
+                  .charAt(0)
+                  .toUpperCase()
+              }
+            </div>
+
+          </div>
+
+        </header>
+
+        <div class="content">
+
+          <section
+            id="overview"
+            class="section active">
+          </section>
+
+          <section
+            id="patients"
+            class="section">
+          </section>
+
+          <section
+            id="consent"
+            class="section">
+          </section>
+
+          <section
+            id="health"
+            class="section">
+          </section>
+
+          <section
+            id="medications"
+            class="section">
+          </section>
+
+          <section
+            id="labs"
+            class="section">
+          </section>
+
+          <section
+            id="timeline"
+            class="section">
+          </section>
+
+          <section
+            id="profile"
+            class="section">
+          </section>
+
+        </div>
+
+      </main>
+
+    </div>
+  `;
+
+  loadOverview();
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
+function openPage(id, button) {
+
+  document
+    .querySelectorAll(".section")
+    .forEach(
+      section =>
+        section.classList.remove(
+          "active"
+        )
+    );
+
+  const target =
+    document.getElementById(id);
+
+  if (target) {
+    target.classList.add("active");
+  }
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(
+      b =>
+        b.classList.remove(
+          "active"
+        )
+    );
+
+  if (button) {
+    button.classList.add("active");
+  }
+
+  const titles = {
+    overview: "Overview",
+    patients: "Patient Registry",
+    consent: "Patient Access",
+    health: "My Health",
+    medications: "Medications",
+    labs: "Laboratory Results",
+    timeline: "Treatment Timeline",
+    profile: "Profile"
+  };
+
+  $("#pageTitle").textContent =
+    titles[id] || "PharmaTwin";
+
+  if (id === "overview")
+    loadOverview();
+
+  if (id === "patients")
+    loadPatients();
+
+  if (id === "consent")
+    loadConsentPage();
+
+  if (id === "health")
+    loadPatientHealth();
+
+  if (id === "medications")
+    loadPatientHealth();
+
+  if (id === "labs")
+    loadPatientHealth();
+
+  if (id === "timeline")
+    loadPatientHealth();
+
+  if (id === "profile")
+    loadProfile();
+}
+
+/* ============================================================
+   OVERVIEW
+   ============================================================ */
+
+async function loadOverview() {
+
+  const section =
+    $("#overview");
+
+  if (
+    currentUser.role ===
+    "clinician"
+  ) {
+
+    section.innerHTML = `
+
+      <div class="heading">
+
+        <div class="eyebrow">
+          CLINICAL INTELLIGENCE
+        </div>
+
+        <h2>Good morning, ${
+          escapeHtml(
+            currentUser.full_name
+          )
+        }</h2>
+
+        <p>
+          Monitor patients, treatments,
+          laboratory changes and
+          AI-generated clinical signals.
+        </p>
+
+      </div>
+
+      <div class="grid grid-4">
+
+        <div class="card">
+          <div class="stat-label">
+            PATIENTS
+          </div>
+
+          <div
+            class="stat-value"
+            id="overviewPatientCount">
+            —
+          </div>
+
+          <div class="stat-note">
+            Authorized patients
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="stat-label">
+            CONSENT
+          </div>
+
+          <div
+            class="stat-value">
+            Active
+          </div>
+
+          <div class="stat-note">
+            Consent-controlled access
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="stat-label">
+            AI
+          </div>
+
+          <div class="stat-value">
+            Ready
+          </div>
+
+          <div class="stat-note">
+            Decision-support layer
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="stat-label">
+            SECURITY
+          </div>
+
+          <div class="stat-value">
+            Audit
+          </div>
+
+          <div class="stat-note">
+            Access events logged
+          </div>
+        </div>
+
+      </div>
+
+      <br>
+
+      <div class="grid grid-2">
+
+        <div class="card">
+
+          <div class="card-title">
+            Clinical workflow
+          </div>
+
+          <div class="stack">
+
+            <div>
+              <span class="badge badge-green">
+                01
+              </span>
+
+              Request patient access
+            </div>
+
+            <div>
+              <span class="badge badge-blue">
+                02
+              </span>
+
+              Patient receives SMS
+            </div>
+
+            <div>
+              <span class="badge badge-yellow">
+                03
+              </span>
+
+              Patient verifies OTP
+            </div>
+
+            <div>
+              <span class="badge badge-green">
+                04
+              </span>
+
+              Authorized data becomes available
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-title">
+            Clinical safety
+          </div>
+
+          <p class="muted">
+            AI signals are designed as
+            decision-support information
+            for clinician review. They do
+            not independently prescribe,
+            change or stop medication.
+          </p>
+
+        </div>
+
+      </div>
+    `;
+
+    try {
+
+      const data =
+        await api(
+          "/api/clinician/patients"
+        );
+
+      $("#overviewPatientCount")
+        .textContent =
+        data.patients.length;
+
+    } catch {}
+  }
+
+  else {
+
+    section.innerHTML = `
+
+      <div class="heading">
+
+        <div class="eyebrow">
+          PATIENT PORTAL
+        </div>
+
+        <h2>Your health dashboard</h2>
+
+        <p>
+          Review your medications,
+          laboratory results and
+          treatment history.
+        </p>
+
+      </div>
+
+      <div class="grid grid-3">
+
+        <div class="card">
+          <div class="stat-label">
+            HEALTH RECORD
+          </div>
+          <div class="stat-value">
+            Protected
+          </div>
+          <div class="stat-note">
+            Your data is consent controlled
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="stat-label">
+            MEDICATIONS
+          </div>
+          <div class="stat-value">
+            —
+          </div>
+          <div class="stat-note">
+            Current treatment
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="stat-label">
+            LAB RESULTS
+          </div>
+          <div class="stat-value">
+            —
+          </div>
+          <div class="stat-note">
+            Latest measurements
+          </div>
+        </div>
+
+      </div>
+
+      <br>
+
+      <div class="card">
+
+        <div class="card-title">
+          Important
+        </div>
+
+        <p class="muted">
+          PharmaTwin AI provides health
+          information and clinical
+          decision-support features.
+          It is not a substitute for
+          professional medical care.
+        </p>
+
+      </div>
+    `;
+  }
+}
+
+/* ============================================================
+   PATIENT REGISTRY
+   ============================================================ */
+
+async function loadPatients() {
+
+  const section =
+    $("#patients");
+
+  section.innerHTML = `
+
+    <div class="heading">
+
+      <div class="eyebrow">
+        LONGITUDINAL CARE
+      </div>
+
+      <h2>Patient Registry</h2>
+
+      <p>
+        Patients who have explicitly
+        authorized your access.
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      <div
+        id="patientTable">
+        Loading...
+      </div>
+
+    </div>
+  `;
+
+  try {
+
+    const data =
+      await api(
+        "/api/clinician/patients"
+      );
+
+    if (!data.patients.length) {
+
+      $("#patientTable").innerHTML = `
+        <p class="muted">
+          No authorized patients yet.
+        </p>
+      `;
+
+      return;
     }
 
-    try{
+    $("#patientTable").innerHTML = `
 
-        const response = await fetch(
-            API_BASE + "/api/auth/register",
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({
-                    full_name,
-                    email,
-                    phone,
-                    password
-                })
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>JSHSHIR</th>
+              <th>Status</th>
+              <th>Consent</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            ${data.patients.map(
+              patient => `
+
+                <tr>
+
+                  <td>
+                    ${escapeHtml(
+                      patient.full_name
+                    )}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(
+                      patient.jshshir
+                    )}
+                  </td>
+
+                  <td>
+                    <span
+                      class="badge badge-green">
+                      ${escapeHtml(
+                        patient.status
+                      )}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span
+                      class="badge badge-green">
+                      ${
+                        patient.consent_status
+                      }
+                    </span>
+                  </td>
+
+                  <td>
+
+                    <button
+                      class="btn btn-secondary"
+                      onclick="openPatient(
+                        ${patient.id}
+                      )">
+                      Open
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              `
+            ).join("")}
+
+          </tbody>
+
+        </table>
+
+      </div>
+    `;
+  } catch(error) {
+
+    $("#patientTable").innerHTML =
+      `<p class="muted">
+        ${escapeHtml(
+          error.message
+        )}
+      </p>`;
+  }
+}
+
+/* ============================================================
+   OPEN PATIENT
+   ============================================================ */
+
+async function openPatient(id) {
+
+  try {
+
+    const data =
+      await api(
+        `/api/clinician/patients/${id}`
+      );
+
+    showPatientModal(data);
+
+  } catch(error) {
+
+    alert(error.message);
+  }
+}
+
+function showPatientModal(data) {
+
+  const patient =
+    data.patient;
+
+  const modal =
+    document.createElement("div");
+
+  modal.className = "modal";
+
+  modal.innerHTML = `
+
+    <div class="modal-card">
+
+      <div class="row">
+
+        <div>
+          <div class="eyebrow">
+            AUTHORIZED PATIENT
+          </div>
+
+          <h2>
+            ${escapeHtml(
+              patient.full_name
+            )}
+          </h2>
+        </div>
+
+        <button
+          class="btn btn-secondary"
+          onclick="this.closest('.modal').remove()">
+          Close
+        </button>
+
+      </div>
+
+      <br>
+
+      <div class="grid grid-3">
+
+        <div class="card">
+          <small class="muted">
+            JSHSHIR
+          </small>
+
+          <strong>
+            ${escapeHtml(
+              patient.jshshir
+            )}
+          </strong>
+        </div>
+
+        <div class="card">
+          <small class="muted">
+            Blood group
+          </small>
+
+          <strong>
+            ${
+              escapeHtml(
+                patient.blood_group ||
+                "Not recorded"
+              )
             }
-        );
+          </strong>
+        </div>
 
-        const data = await response.json();
+        <div class="card">
+          <small class="muted">
+            Allergies
+          </small>
 
-        if(!response.ok){
-
-            alert(data.error || "Registration failed.");
-            return;
-        }
-
-        token = data.token;
-        patient = data.patient;
-
-        localStorage.setItem("pharmatwin_token",token);
-        localStorage.setItem("pharmatwin_patient",JSON.stringify(patient));
-
-        enterApp();
-
-    }catch(error){
-
-        alert("Could not connect to PharmaTwin server.");
-        console.error(error);
-    }
-}
-
-
-async function login(){
-
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
-
-    if(!email || !password){
-
-        alert("Enter email and password.");
-        return;
-    }
-
-    try{
-
-        const response = await fetch(
-            API_BASE + "/api/auth/login",
-            {
-                method:"POST",
-                headers:{
-                    "Content-Type":"application/json"
-                },
-                body:JSON.stringify({
-                    email,
-                    password
-                })
+          <strong>
+            ${
+              escapeHtml(
+                patient.allergies ||
+                "Not recorded"
+              )
             }
-        );
+          </strong>
+        </div>
 
-        const data = await response.json();
+      </div>
 
-        if(!response.ok){
+      <br>
 
-            alert(data.error || "Login failed.");
-            return;
+      <div class="card">
+
+        <div class="card-title">
+          Medications
+        </div>
+
+        ${
+          data.medications.length
+          ? `
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Medicine</th>
+                    <th>Dose</th>
+                    <th>Status</th>
+                    <th>Side effects</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  ${data.medications.map(
+                    m => `
+                      <tr>
+                        <td>
+                          ${escapeHtml(m.name)}
+                        </td>
+
+                        <td>
+                          ${escapeHtml(m.dose || "-")}
+                        </td>
+
+                        <td>
+                          ${escapeHtml(m.status || "-")}
+                        </td>
+
+                        <td>
+                          ${escapeHtml(
+                            m.side_effects || "-"
+                          )}
+                        </td>
+                      </tr>
+                    `
+                  ).join("")}
+
+                </tbody>
+              </table>
+            </div>
+          `
+          : `
+            <p class="muted">
+              No medication records.
+            </p>
+          `
         }
 
-        token = data.token;
-        patient = data.patient;
-
-        localStorage.setItem("pharmatwin_token",token);
-        localStorage.setItem("pharmatwin_patient",JSON.stringify(patient));
-
-        enterApp();
-
-    }catch(error){
-
-        console.error(error);
-
-        alert(
-            "Server connection failed. Make sure your Render backend is running."
-        );
-    }
-}
-
-
-function logout(){
-
-    localStorage.removeItem("pharmatwin_token");
-    localStorage.removeItem("pharmatwin_patient");
-
-    token = null;
-    patient = null;
-
-    document.getElementById("app").classList.add("hidden");
-    document.getElementById("authScreen").classList.remove("hidden");
-
-    showLogin();
-}
-
-
-// ================= APP =================
-
-function enterApp(){
-
-    document.getElementById("authScreen").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-
-    updatePatientUI();
-
-    loadDashboard();
-}
-
-
-function updatePatientUI(){
-
-    if(!patient) return;
-
-    const name = patient.full_name || "Patient";
-
-    document.getElementById("welcomeName").textContent =
-        "Welcome, " + name.split(" ")[0];
-
-    document.getElementById("topName").textContent = name;
-
-    document.getElementById("avatar").textContent =
-        name.charAt(0).toUpperCase();
-
-    document.getElementById("profileName").textContent =
-        name;
-
-    document.getElementById("profileEmail").textContent =
-        patient.email || "—";
-
-    document.getElementById("profilePhone").textContent =
-        patient.phone || "Not provided";
-}
-
-
-function navigate(page,button){
-
-    document.querySelectorAll(".page").forEach(
-        p => p.classList.remove("active")
-    );
-
-    document.getElementById(page).classList.add("active");
-
-    document.querySelectorAll(".nav button").forEach(
-        b => b.classList.remove("active")
-    );
-
-    if(button){
-        button.classList.add("active");
-    }
-
-    if(page === "dashboard") loadDashboard();
-    if(page === "diseases") loadDiseases();
-    if(page === "medications") loadMedications();
-    if(page === "labs") loadLabs();
-    if(page === "effects") loadEffects();
-    if(page === "timeline") loadTimeline();
-    if(page === "profile") loadProfile();
-}
-
-
-// ================= API =================
-
-async function api(path,options={}){
-
-    options.headers = {
-
-        ...(options.headers || {}),
-
-        "Content-Type":"application/json",
-        "Authorization":"Bearer " + token
-
-    };
-
-    const response = await fetch(
-        API_BASE + path,
-        options
-    );
-
-    const data = await response.json();
-
-    if(response.status === 401){
-
-        logout();
-
-        throw new Error("Session expired");
-    }
-
-    if(!response.ok){
-
-        throw new Error(
-            data.error || "Request failed"
-        );
-    }
-
-    return data;
-}
-
-
-// ================= DASHBOARD =================
-
-async function loadDashboard(){
-
-    try{
-
-        const [
-            diseases,
-            medications,
-            labs,
-            effects
-        ] = await Promise.all([
-
-            api("/api/patient/diseases"),
-            api("/api/patient/medications"),
-            api("/api/patient/labs"),
-            api("/api/patient/side-effects")
-
-        ]);
-
-        document.getElementById("statDiseases").textContent =
-            diseases.length;
-
-        document.getElementById("statMeds").textContent =
-            medications.length;
-
-        document.getElementById("statLabs").textContent =
-            labs.length;
-
-        document.getElementById("statEffects").textContent =
-            effects.length;
-
-        const box =
-            document.getElementById("dashboardMeds");
-
-        if(!medications.length){
-
-            box.innerHTML =
-                '<p class="card-note">No medications recorded yet.</p>';
-
-            return;
+      </div>
+
+      <br>
+
+      <div class="card">
+
+        <div class="card-title">
+          Laboratory results
+        </div>
+
+        ${
+          data.labs.length
+          ? `
+            <div class="table-wrap">
+              <table>
+
+                <thead>
+                  <tr>
+                    <th>Test</th>
+                    <th>Value</th>
+                    <th>Unit</th>
+                    <th>Flag</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  ${data.labs.map(
+                    lab => `
+                      <tr>
+
+                        <td>
+                          ${escapeHtml(
+                            lab.test_name
+                          )}
+                        </td>
+
+                        <td>
+                          ${escapeHtml(
+                            lab.value || "-"
+                          )}
+                        </td>
+
+                        <td>
+                          ${escapeHtml(
+                            lab.unit || "-"
+                          )}
+                        </td>
+
+                        <td>
+                          <span class="badge ${
+                            lab.flag === "high" ||
+                            lab.flag === "low"
+                              ? "badge-red"
+                              : "badge-green"
+                          }">
+                            ${escapeHtml(
+                              lab.flag || "normal"
+                            )}
+                          </span>
+                        </td>
+
+                      </tr>
+                    `
+                  ).join("")}
+
+                </tbody>
+
+              </table>
+            </div>
+          `
+          : `
+            <p class="muted">
+              No laboratory results.
+            </p>
+          `
         }
 
-        box.innerHTML = medications.slice(0,5).map(m => `
+      </div>
 
-            <div class="list-item">
+      <br>
 
-                <div>
-                    <strong>${escapeHTML(m.name)}</strong>
+      <div class="card">
 
-                    <div class="card-note">
-                        ${escapeHTML(m.dose || "Dose not recorded")}
-                    </div>
+        <div class="card-title">
+          AI clinical signals
+        </div>
+
+        ${
+          data.signals.length
+          ? data.signals.map(
+            signal => `
+
+              <div
+                style="
+                  padding:14px;
+                  border:1px solid var(--border);
+                  border-radius:12px;
+                  margin-bottom:10px;
+                ">
+
+                <div class="row">
+
+                  <strong>
+                    ${escapeHtml(
+                      signal.title
+                    )}
+                  </strong>
+
+                  <span class="badge ${
+                    signal.severity === "high"
+                      ? "badge-red"
+                      : "badge-blue"
+                  }">
+                    ${escapeHtml(
+                      signal.severity
+                    )}
+                  </span>
+
                 </div>
 
-                <span class="badge green">
-                    ${escapeHTML(m.status || "active")}
+                <p
+                  class="muted"
+                  style="margin-top:7px">
+                  ${escapeHtml(
+                    signal.summary || ""
+                  )}
+                </p>
+
+                <p
+                  style="margin-top:7px">
+                  <strong>
+                    Clinician review:
+                  </strong>
+
+                  ${escapeHtml(
+                    signal.recommendation || ""
+                  )}
+                </p>
+
+              </div>
+            `
+          ).join("")
+          : `
+            <p class="muted">
+              No AI signals recorded.
+            </p>
+          `
+        }
+
+      </div>
+
+      ${
+        data.terminal.length
+        ? `
+
+          <br>
+
+          <div class="card">
+
+            <div class="card-title">
+              Serious-condition monitoring
+            </div>
+
+            ${data.terminal.map(
+              item => `
+
+                <div
+                  style="
+                    padding:14px;
+                    border:1px solid
+                      rgba(255,101,117,.25);
+                    border-radius:12px;
+                    margin-bottom:10px;
+                  ">
+
+                  <strong>
+                    ${escapeHtml(
+                      item.condition
+                    )}
+                  </strong>
+
+                  <p class="muted">
+                    Status:
+                    ${escapeHtml(
+                      item.status || "-"
+                    )}
+                  </p>
+
+                  <p class="muted">
+                    Estimated course:
+                    ${escapeHtml(
+                      item.estimated_course || "-"
+                    )}
+                  </p>
+
+                </div>
+              `
+            ).join("")}
+
+          </div>
+
+        `
+        : ""
+      }
+
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+}
+
+/* ============================================================
+   CONSENT PAGE
+   ============================================================ */
+
+function loadConsentPage() {
+
+  const section =
+    $("#consent");
+
+  section.innerHTML = `
+
+    <div class="heading">
+
+      <div class="eyebrow">
+        PRIVACY & AUTHORIZATION
+      </div>
+
+      <h2>Request Patient Access</h2>
+
+      <p>
+        Enter a patient's JSHSHIR to
+        initiate an explicit consent flow.
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      <form
+        onsubmit="sendConsent(event)">
+
+        <div class="field">
+
+          <label>
+            Patient JSHSHIR
+          </label>
+
+          <input
+            id="consentJshshir"
+            maxlength="14"
+            inputmode="numeric"
+            required
+            placeholder="14 digits">
+
+        </div>
+
+        <button
+          class="btn btn-primary">
+          Send consent request
+        </button>
+
+      </form>
+
+      <div
+        id="consentResult"
+        class="message hidden">
+      </div>
+
+    </div>
+  `;
+}
+
+async function sendConsent(event) {
+
+  event.preventDefault();
+
+  const result =
+    $("#consentResult");
+
+  try {
+
+    const data =
+      await api(
+        "/api/consent-requests",
+        {
+          method: "POST",
+
+          body: JSON.stringify({
+            jshshir:
+              $("#consentJshshir")
+                .value
+          })
+        }
+      );
+
+    result.textContent =
+      "✓ " + data.message;
+
+    result.classList.remove(
+      "hidden"
+    );
+
+  } catch(error) {
+
+    result.textContent =
+      error.message;
+
+    result.classList.remove(
+      "hidden"
+    );
+  }
+}
+
+/* ============================================================
+   PATIENT HEALTH
+   ============================================================ */
+
+async function loadPatientHealth() {
+
+  try {
+
+    const data =
+      await api(
+        "/api/patient/me"
+      );
+
+    const patient =
+      data.patient;
+
+    renderHealth(
+      patient,
+      data
+    );
+
+  } catch(error) {
+
+    alert(error.message);
+  }
+}
+
+function renderHealth(
+  patient,
+  data
+) {
+
+  $("#health").innerHTML = `
+
+    <div class="heading">
+
+      <div class="eyebrow">
+        PERSONAL HEALTH RECORD
+      </div>
+
+      <h2>
+        My Health
+      </h2>
+
+      <p>
+        Your health information in one place.
+      </p>
+
+    </div>
+
+    <div class="grid grid-4">
+
+      <div class="card">
+
+        <div class="stat-label">
+          STATUS
+        </div>
+
+        <div class="stat-value">
+          ${escapeHtml(
+            patient.status
+          )}
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="stat-label">
+          MEDICATIONS
+        </div>
+
+        <div class="stat-value">
+          ${data.medications.length}
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="stat-label">
+          LAB RESULTS
+        </div>
+
+        <div class="stat-value">
+          ${data.labs.length}
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="stat-label">
+          CONSENT
+        </div>
+
+        <div class="stat-value">
+          Granted
+        </div>
+
+      </div>
+
+    </div>
+
+    <br>
+
+    <div class="grid grid-2">
+
+      <div class="card">
+
+        <div class="card-title">
+          Conditions
+        </div>
+
+        ${
+          data.diseases.length
+          ? data.diseases.map(
+            d => `
+
+              <div
+                style="
+                  padding:13px;
+                  border-bottom:
+                    1px solid var(--border);
+                ">
+
+                <strong>
+                  ${escapeHtml(d.name)}
+                </strong>
+
+                <div class="muted">
+                  ${escapeHtml(
+                    d.type || ""
+                  )}
+                </div>
+
+                <span
+                  class="badge badge-yellow">
+                  ${escapeHtml(
+                    d.severity || "Recorded"
+                  )}
                 </span>
 
-            </div>
-
-        `).join("");
-
-    }catch(error){
-
-        console.error(error);
-    }
-}
-
-
-// ================= PROFILE =================
-
-async function loadProfile(){
-
-    try{
-
-        const data =
-            await api("/api/patient/profile");
-
-        document.getElementById("profileName").textContent =
-            data.full_name;
-
-        document.getElementById("profileEmail").textContent =
-            data.email;
-
-        document.getElementById("profilePhone").textContent =
-            data.phone || "Not provided";
-
-        document.getElementById("profileBlood").textContent =
-            data.blood_type || "Not provided";
-
-        document.getElementById("oneidStatus").textContent =
-            data.oneid_connected
-                ? "Connected"
-                : "Not connected";
-
-        document.getElementById("consentStatus").textContent =
-            data.consent_given
-                ? "Granted"
-                : "Not provided";
-
-    }catch(error){
-
-        console.error(error);
-    }
-}
-
-
-// ================= DISEASES =================
-
-async function loadDiseases(){
-
-    try{
-
-        const data =
-            await api("/api/patient/diseases");
-
-        const table =
-            document.getElementById("diseaseTable");
-
-        if(!data.length){
-
-            table.innerHTML =
-                `<tr><td colspan="4">No conditions recorded.</td></tr>`;
-
-            return;
+              </div>
+            `
+          ).join("")
+          : `
+            <p class="muted">
+              No conditions recorded.
+            </p>
+          `
         }
 
-        table.innerHTML = data.map(d => `
+      </div>
 
-            <tr>
+      <div class="card">
 
-                <td>
-                    <strong>${escapeHTML(d.name)}</strong>
-                </td>
+        <div class="card-title">
+          AI health signals
+        </div>
 
-                <td>
-                    <span class="badge">
-                        ${escapeHTML(d.status || "monitoring")}
-                    </span>
-                </td>
+        ${
+          data.signals.length
+          ? data.signals.map(
+            s => `
 
-                <td>
-                    ${escapeHTML(d.severity || "—")}
-                </td>
+              <div
+                style="
+                  padding:13px;
+                  border-bottom:
+                    1px solid var(--border);
+                ">
 
-                <td>
-                    ${escapeHTML(d.diagnosed_at || "—")}
-                </td>
+                <strong>
+                  ${escapeHtml(s.title)}
+                </strong>
 
-            </tr>
-
-        `).join("");
-
-    }catch(error){
-
-        console.error(error);
-    }
-}
-
-
-// ================= MEDICATIONS =================
-
-async function loadMedications(){
-
-    try{
-
-        const data =
-            await api("/api/patient/medications");
-
-        const table =
-            document.getElementById("medicationTable");
-
-        if(!data.length){
-
-            table.innerHTML =
-                `<tr><td colspan="5">No medications recorded.</td></tr>`;
-
-            return;
-        }
-
-        table.innerHTML = data.map(m => `
-
-            <tr>
-
-                <td><strong>${escapeHTML(m.name)}</strong></td>
-
-                <td>${escapeHTML(m.dose || "—")}</td>
-
-                <td>${escapeHTML(m.frequency || "—")}</td>
-
-                <td>${escapeHTML(m.purpose || "—")}</td>
-
-                <td>
-                    <span class="badge green">
-                        ${escapeHTML(m.status || "active")}
-                    </span>
-                </td>
-
-            </tr>
-
-        `).join("");
-
-    }catch(error){
-
-        console.error(error);
-    }
-}
-
-
-// ================= LABS =================
-
-async function loadLabs(){
-
-    try{
-
-        const data =
-            await api("/api/patient/labs");
-
-        const table =
-            document.getElementById("labTable");
-
-        if(!data.length){
-
-            table.innerHTML =
-                `<tr><td colspan="5">No laboratory results recorded.</td></tr>`;
-
-            return;
-        }
-
-        table.innerHTML = data.map(l => `
-
-            <tr>
-
-                <td><strong>${escapeHTML(l.marker)}</strong></td>
-
-                <td>${escapeHTML(String(l.value ?? "—"))}</td>
-
-                <td>${escapeHTML(l.unit || "—")}</td>
-
-                <td>${escapeHTML(l.reference_range || "—")}</td>
-
-                <td>${escapeHTML(l.recorded_at || "—")}</td>
-
-            </tr>
-
-        `).join("");
-
-    }catch(error){
-
-        console.error(error);
-    }
-}
-
-
-// ================= SIDE EFFECTS =================
-
-async function loadEffects(){
-
-    try{
-
-        const data =
-            await api("/api/patient/side-effects");
-
-        const list =
-            document.getElementById("effectsList");
-
-        if(!data.length){
-
-            list.innerHTML =
-                '<div class="card"><p>No side effects recorded.</p></div>';
-
-            return;
-        }
-
-        list.innerHTML = data.map(e => `
-
-            <div class="insight">
-
-                <h3>
-                    ${escapeHTML(e.effect)}
-                </h3>
-
-                <p>
-                    Medication:
-                    ${escapeHTML(e.medication_name || "Not specified")}
+                <p class="muted">
+                  ${escapeHtml(
+                    s.summary || ""
+                  )}
                 </p>
 
-                <p>
-                    Severity:
-                    ${escapeHTML(e.severity || "Not specified")}
-                </p>
-
-                <p>
-                    Observed:
-                    ${escapeHTML(e.observed_at || "—")}
-                </p>
-
-            </div>
-
-        `).join("");
-
-    }catch(error){
-
-        console.error(error);
-    }
-}
-
-
-// ================= TIMELINE =================
-
-async function loadTimeline(){
-
-    try{
-
-        const data =
-            await api("/api/patient/timeline");
-
-        const list =
-            document.getElementById("timelineList");
-
-        if(!data.length){
-
-            list.innerHTML =
-                '<div class="card"><p>No treatment events recorded.</p></div>';
-
-            return;
+              </div>
+            `
+          ).join("")
+          : `
+            <p class="muted">
+              No signals available.
+            </p>
+          `
         }
 
-        list.innerHTML = data.map(e => `
+      </div>
 
-            <div class="timeline-item">
+    </div>
+  `;
 
-                <div class="timeline-dot"></div>
+  $("#medications").innerHTML = `
 
-                <div class="timeline-date">
-                    ${escapeHTML(e.event_date || "Date not recorded")}
+    <div class="heading">
+
+      <div class="eyebrow">
+        THERAPY
+      </div>
+
+      <h2>Medications</h2>
+
+      <p>
+        Current and historical treatment records.
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      ${
+        data.medications.length
+        ? `
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+
+                <tr>
+                  <th>Medication</th>
+                  <th>Dose</th>
+                  <th>Frequency</th>
+                  <th>Status</th>
+                  <th>Positive effects</th>
+                  <th>Side effects</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                ${data.medications.map(
+                  m => `
+
+                    <tr>
+
+                      <td>
+                        ${escapeHtml(m.name)}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(m.dose || "-")}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          m.frequency || "-"
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          m.status || "-"
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          m.positive_effects || "-"
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          m.side_effects || "-"
+                        )}
+                      </td>
+
+                    </tr>
+                  `
+                ).join("")}
+
+              </tbody>
+
+            </table>
+
+          </div>
+        `
+        : `
+          <p class="muted">
+            No medications recorded.
+          </p>
+        `
+      }
+
+    </div>
+  `;
+
+  $("#labs").innerHTML = `
+
+    <div class="heading">
+
+      <div class="eyebrow">
+        BIOMARKERS
+      </div>
+
+      <h2>Laboratory Results</h2>
+
+      <p>
+        Your recorded laboratory measurements.
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      ${
+        data.labs.length
+        ? `
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Test</th>
+                  <th>Value</th>
+                  <th>Unit</th>
+                  <th>Reference</th>
+                  <th>Flag</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                ${data.labs.map(
+                  lab => `
+
+                    <tr>
+
+                      <td>
+                        ${escapeHtml(
+                          lab.test_name
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          lab.value || "-"
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          lab.unit || "-"
+                        )}
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          lab.reference_range || "-"
+                        )}
+                      </td>
+
+                      <td>
+                        <span class="badge ${
+                          lab.flag === "high" ||
+                          lab.flag === "low"
+                            ? "badge-red"
+                            : "badge-green"
+                        }">
+                          ${escapeHtml(
+                            lab.flag || "normal"
+                          )}
+                        </span>
+                      </td>
+
+                      <td>
+                        ${escapeHtml(
+                          lab.measured_at || "-"
+                        )}
+                      </td>
+
+                    </tr>
+                  `
+                ).join("")}
+
+              </tbody>
+
+            </table>
+
+          </div>
+        `
+        : `
+          <p class="muted">
+            No laboratory results recorded.
+          </p>
+        `
+      }
+
+    </div>
+  `;
+
+  $("#timeline").innerHTML = `
+
+    <div class="heading">
+
+      <div class="eyebrow">
+        LONGITUDINAL DATA
+      </div>
+
+      <h2>Treatment Timeline</h2>
+
+      <p>
+        Chronological view of major health events.
+      </p>
+
+    </div>
+
+    <div class="card">
+
+      <div class="timeline">
+
+        ${
+          data.timeline.length
+          ? data.timeline.map(
+            event => `
+
+              <div
+                class="timeline-item">
+
+                <div
+                  class="timeline-dot">
                 </div>
 
-                <div class="timeline-content">
+                <div
+                  class="timeline-date">
 
-                    <span class="timeline-tag">
-                        ${escapeHTML(e.event_type)}
-                    </span>
-
-                    <h3>
-                        ${escapeHTML(e.title)}
-                    </h3>
-
-                    <p>
-                        ${escapeHTML(e.description || "")}
-                    </p>
+                  ${escapeHtml(
+                    event.event_date || "-"
+                  )}
 
                 </div>
 
-            </div>
+                <div
+                  class="timeline-content">
 
-        `).join("");
+                  <span
+                    class="badge badge-blue">
 
-    }catch(error){
+                    ${escapeHtml(
+                      event.event_type
+                    )}
 
-        console.error(error);
-    }
-}
+                  </span>
 
+                  <h3
+                    style="margin-top:8px">
 
-// ================= AI =================
+                    ${escapeHtml(
+                      event.title
+                    )}
 
-async function runAI(){
+                  </h3>
 
-    const box =
-        document.getElementById("aiResults");
+                  <p
+                    class="muted"
+                    style="margin-top:6px">
 
-    box.innerHTML =
-        '<div class="card"><p>Analyzing available patient data...</p></div>';
+                    ${escapeHtml(
+                      event.description || ""
+                    )}
 
-    try{
+                  </p>
 
-        const data =
-            await api(
-                "/api/ai/analyze",
-                {
-                    method:"POST",
-                    body:JSON.stringify({})
-                }
-            );
-
-        box.innerHTML = data.insights.map(i => `
-
-            <div class="insight">
-
-                <h3>${escapeHTML(i.title)}</h3>
-
-                <p>${escapeHTML(i.description)}</p>
-
-                <div style="margin-top:10px">
-                    Confidence:
-                    ${Math.round(i.confidence * 100)}%
                 </div>
 
-            </div>
+              </div>
+            `
+          ).join("")
+          : `
+            <p class="muted">
+              No timeline events.
+            </p>
+          `
+        }
 
-        `).join("");
+      </div>
 
-    }catch(error){
-
-        box.innerHTML =
-            `<div class="warning">${escapeHTML(error.message)}</div>`;
-    }
+    </div>
+  `;
 }
 
+/* ============================================================
+   PROFILE
+   ============================================================ */
 
-// ================= MODALS =================
+function loadProfile() {
 
-function openModal(title,body){
+  $("#profile").innerHTML = `
 
-    document.getElementById("modalTitle").textContent =
-        title;
+    <div class="heading">
 
-    document.getElementById("modalBody").innerHTML =
-        body;
+      <div class="eyebrow">
+        ACCOUNT
+      </div>
 
-    document.getElementById("modal").classList.add("show");
+      <h2>Profile</h2>
+
+    </div>
+
+    <div class="card">
+
+      <div class="grid grid-2">
+
+        <div>
+
+          <div class="field">
+            <label>Name</label>
+
+            <input
+              readonly
+              value="${escapeAttribute(
+                currentUser.full_name
+              )}">
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+
+            <input
+              readonly
+              value="${escapeAttribute(
+                currentUser.email
+              )}">
+          </div>
+
+        </div>
+
+        <div>
+
+          <div class="field">
+            <label>Role</label>
+
+            <input
+              readonly
+              value="${escapeAttribute(
+                currentUser.role
+              )}">
+          </div>
+
+          <div class="field">
+            <label>Account ID</label>
+
+            <input
+              readonly
+              value="${currentUser.id}">
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
 }
 
+/* ============================================================
+   LOGOUT
+   ============================================================ */
 
-function closeModal(){
+function logout() {
 
-    document.getElementById("modal").classList.remove("show");
+  localStorage.removeItem(
+    "pharmatwin_token"
+  );
+
+  token = null;
+  currentUser = null;
+
+  renderAuth();
 }
 
+/* ============================================================
+   CONSENT LINK MODE
+   ============================================================ */
 
-function openDiseaseModal(){
+async function handleConsentLink() {
 
-    openModal(
-        "Add condition",
-        `
-
-        <div class="form-group">
-        <label>Condition name</label>
-        <input id="mDiseaseName">
-        </div>
-
-        <div class="form-group">
-        <label>Status</label>
-        <select id="mDiseaseStatus">
-            <option>monitoring</option>
-            <option>active</option>
-            <option>stable</option>
-            <option>resolved</option>
-        </select>
-        </div>
-
-        <div class="form-group">
-        <label>Severity</label>
-        <input id="mDiseaseSeverity">
-        </div>
-
-        <div class="form-group">
-        <label>Diagnosis date</label>
-        <input id="mDiseaseDate" type="date">
-        </div>
-
-        <button class="primary-btn" onclick="saveDisease()">
-        Save condition
-        </button>
-
-        `
+  const params =
+    new URLSearchParams(
+      window.location.search
     );
-}
 
+  const consent =
+    params.get("consent");
 
-async function saveDisease(){
+  if (!consent) {
+    return false;
+  }
 
-    try{
+  try {
 
-        await api(
-            "/api/patient/diseases",
-            {
-                method:"POST",
-                body:JSON.stringify({
+    const data =
+      await fetch(
+        `${API}/api/consent/${consent}`
+      );
 
-                    name:
-                        document.getElementById("mDiseaseName").value,
+    const request =
+      await data.json();
 
-                    status:
-                        document.getElementById("mDiseaseStatus").value,
-
-                    severity:
-                        document.getElementById("mDiseaseSeverity").value,
-
-                    diagnosed_at:
-                        document.getElementById("mDiseaseDate").value
-
-                })
-            }
-        );
-
-        closeModal();
-        loadDiseases();
-
-    }catch(error){
-
-        alert(error.message);
-    }
-}
-
-
-function openMedicationModal(){
-
-    openModal(
-        "Add medication",
-        `
-
-        <div class="form-group">
-        <label>Medication name</label>
-        <input id="mMedName">
-        </div>
-
-        <div class="form-group">
-        <label>Dose</label>
-        <input id="mMedDose" placeholder="As prescribed">
-        </div>
-
-        <div class="form-group">
-        <label>Frequency</label>
-        <input id="mMedFrequency">
-        </div>
-
-        <div class="form-group">
-        <label>Purpose</label>
-        <input id="mMedPurpose">
-        </div>
-
-        <button class="primary-btn" onclick="saveMedication()">
-        Save medication
-        </button>
-
-        `
+    renderConsentPage(
+      consent,
+      request
     );
+
+    return true;
+
+  } catch {
+
+    root.innerHTML = `
+      <div class="consent-page">
+
+        <div class="consent-card">
+
+          <div class="consent-icon">
+            !
+          </div>
+
+          <h2>
+            Unable to connect
+          </h2>
+
+          <p
+            class="muted"
+            style="margin-top:10px">
+            Please try again later.
+          </p>
+
+        </div>
+
+      </div>
+    `;
+
+    return true;
+  }
 }
 
+function renderConsentPage(
+  consentToken,
+  request
+) {
 
-async function saveMedication(){
+  root.innerHTML = `
 
-    try{
+    <div class="consent-page">
 
-        await api(
-            "/api/patient/medications",
-            {
-                method:"POST",
-                body:JSON.stringify({
+      <div class="consent-card">
 
-                    name:
-                        document.getElementById("mMedName").value,
-
-                    dose:
-                        document.getElementById("mMedDose").value,
-
-                    frequency:
-                        document.getElementById("mMedFrequency").value,
-
-                    purpose:
-                        document.getElementById("mMedPurpose").value
-
-                })
-            }
-        );
-
-        closeModal();
-        loadMedications();
-
-    }catch(error){
-
-        alert(error.message);
-    }
-}
-
-
-function openLabModal(){
-
-    openModal(
-        "Add laboratory result",
-        `
-
-        <div class="form-group">
-        <label>Marker</label>
-        <input id="mLabMarker" placeholder="e.g. Hemoglobin">
+        <div class="consent-icon">
+          ✓
         </div>
 
-        <div class="form-group">
-        <label>Value</label>
-        <input id="mLabValue" type="number">
+        <div class="eyebrow">
+          PHARMATWIN AI
         </div>
 
-        <div class="form-group">
-        <label>Unit</label>
-        <input id="mLabUnit">
-        </div>
+        <h1
+          style="margin-top:7px">
+          Patient Data Access
+        </h1>
 
-        <div class="form-group">
-        <label>Reference range</label>
-        <input id="mLabReference">
-        </div>
+        <p
+          class="muted"
+          style="margin-top:12px">
 
-        <button class="primary-btn" onclick="saveLab()">
-        Save result
-        </button>
-
-        `
-    );
-}
-
-
-async function saveLab(){
-
-    try{
-
-        await api(
-            "/api/patient/labs",
-            {
-                method:"POST",
-                body:JSON.stringify({
-
-                    marker:
-                        document.getElementById("mLabMarker").value,
-
-                    value:
-                        Number(document.getElementById("mLabValue").value),
-
-                    unit:
-                        document.getElementById("mLabUnit").value,
-
-                    reference_range:
-                        document.getElementById("mLabReference").value
-
-                })
-            }
-        );
-
-        closeModal();
-        loadLabs();
-
-    }catch(error){
-
-        alert(error.message);
-    }
-}
-
-
-function openEffectModal(){
-
-    openModal(
-        "Report side effect",
-        `
-
-        <div class="form-group">
-        <label>Observed effect</label>
-        <input id="mEffect">
-        </div>
-
-        <div class="form-group">
-        <label>Severity</label>
-        <select id="mEffectSeverity">
-            <option>mild</option>
-            <option>moderate</option>
-            <option>severe</option>
-        </select>
-        </div>
-
-        <div class="form-group">
-        <label>Notes</label>
-        <textarea id="mEffectNotes"></textarea>
-        </div>
-
-        <button class="primary-btn" onclick="saveEffect()">
-        Record side effect
-        </button>
-
-        `
-    );
-}
-
-
-async function saveEffect(){
-
-    try{
-
-        await api(
-            "/api/patient/side-effects",
-            {
-                method:"POST",
-                body:JSON.stringify({
-
-                    effect:
-                        document.getElementById("mEffect").value,
-
-                    severity:
-                        document.getElementById("mEffectSeverity").value,
-
-                    notes:
-                        document.getElementById("mEffectNotes").value
-
-                })
-            }
-        );
-
-        closeModal();
-        loadEffects();
-
-    }catch(error){
-
-        alert(error.message);
-    }
-}
-
-
-// ================= CONSENT =================
-
-function openConsent(){
-
-    openModal(
-        "Data consent",
-        `
-
-        <p style="line-height:1.6;color:#64748b;margin-bottom:20px">
-
-        PharmaTwin requires your permission before health information
-        is used for analysis. You can withdraw your consent according
-        to the application's privacy policy.
+          A clinician is requesting
+          permission to access your
+          protected health information.
 
         </p>
 
-        <button class="primary-btn" onclick="saveConsent(true)">
-        I agree
-        </button>
+        <div
+          class="card"
+          style="margin-top:20px">
 
-        <button
-            class="primary-btn"
-            style="background:#f1f5f9;color:#172033;margin-top:10px"
-            onclick="saveConsent(false)"
-        >
-        I do not agree
-        </button>
+          <strong>
+            Clinician
+          </strong>
 
-        `
-    );
+          <p
+            style="margin-top:5px">
+
+            ${escapeHtml(
+              request.clinician_name
+            )}
+
+          </p>
+
+        </div>
+
+        <div
+          id="consentActions"
+          style="margin-top:20px">
+
+          <button
+            class="btn btn-primary full"
+            onclick="showConsentOTP(
+              '${consentToken}'
+            )">
+
+            I AGREE
+
+          </button>
+
+          <br><br>
+
+          <button
+            class="btn btn-danger full"
+            onclick="declineConsentPublic(
+              '${consentToken}'
+            )">
+
+            I DON'T AGREE
+
+          </button>
+
+        </div>
+
+        <div
+          id="consentPublicMessage"
+          class="message hidden">
+        </div>
+
+      </div>
+
+    </div>
+  `;
 }
 
+function showConsentOTP(
+  consentToken
+) {
 
-async function saveConsent(value){
+  $("#consentActions").innerHTML = `
 
-    try{
+    <div class="field">
 
-        await api(
-            "/api/patient/consent",
-            {
-                method:"POST",
-                body:JSON.stringify({
-                    consent:value
-                })
-            }
-        );
+      <label>
+        Enter the 6-digit code sent by SMS
+      </label>
 
-        closeModal();
-        loadProfile();
+      <input
+        id="publicOTP"
+        maxlength="6"
+        inputmode="numeric"
+        placeholder="123456">
 
-    }catch(error){
+    </div>
 
-        alert(error.message);
+    <button
+      class="btn btn-primary full"
+      onclick="approveConsentPublic(
+        '${consentToken}'
+      )">
+
+      Verify & Give Consent
+
+    </button>
+
+    <br><br>
+
+    <button
+      class="btn btn-secondary full"
+      onclick="location.reload()">
+
+      Back
+
+    </button>
+  `;
+}
+
+async function approveConsentPublic(
+  tokenValue
+) {
+
+  const code =
+    $("#publicOTP").value.trim();
+
+  try {
+
+    const response =
+      await fetch(
+        `${API}/api/consent/${tokenValue}/respond`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            decision: "agree",
+            code
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message
+      );
     }
+
+    showPublicMessage(
+      "✓ Consent granted successfully. The clinician can now access your authorized record."
+    );
+
+  } catch(error) {
+
+    showPublicMessage(
+      error.message
+    );
+  }
 }
 
+async function declineConsentPublic(
+  tokenValue
+) {
 
-// ================= SECURITY =================
+  try {
 
-function escapeHTML(value){
+    const response =
+      await fetch(
+        `${API}/api/consent/${tokenValue}/respond`,
+        {
+          method: "POST",
 
-    return String(value ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+            decision: "decline"
+          })
+        }
+      );
+
+    const data =
+      await response.json();
+
+    showPublicMessage(
+      data.message ||
+      "Access request declined."
+    );
+
+  } catch(error) {
+
+    showPublicMessage(
+      error.message
+    );
+  }
 }
 
+function showPublicMessage(
+  text
+) {
 
-// ================= START =================
+  const box =
+    $("#consentPublicMessage");
 
-if(token && patient){
-
-    enterApp();
-
+  box.textContent = text;
+  box.classList.remove(
+    "hidden"
+  );
 }
 
+/* ============================================================
+   SECURITY HELPERS
+   ============================================================ */
+
+function escapeHtml(value) {
+
+  return String(
+    value ?? ""
+  )
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(value);
+}
+
+/* ============================================================
+   START
+   ============================================================ */
+
+(async function start() {
+
+  const isConsent =
+    await handleConsentLink();
+
+  if (isConsent) {
+    return;
+  }
+
+  if (!token) {
+
+    renderAuth();
+
+    return;
+  }
+
+  try {
+
+    const data =
+      await api("/api/me");
+
+    currentUser =
+      data.user;
+
+    renderDashboard();
+
+  } catch {
+
+    logout();
+  }
+
+})();
 </script>
 
 </body>
 </html>
-<script>
-const API_URL = "https://pharmatwin-ai-4.onrender.com";
-
-async function apiRequest(endpoint, options = {}) {
-    try {
-        const response = await fetch(API_URL + endpoint, {
-            headers: {
-                "Content-Type": "application/json",
-                ...(options.headers || {})
-            },
-            ...options
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || "Server error");
-        }
-
-        return data;
-    } catch (error) {
-        console.error("API Error:", error);
-        alert("Server bilan bog‘lanishda xatolik: " + error.message);
-        throw error;
-    }
-}
-</script>
